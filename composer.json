@@ -1,0 +1,24 @@
+{
+    "name": "jeroenvdheuve/unserializer",
+    "license": "MIT",
+    "type": "library",
+    "description": "Unserializes php serialized strings and is able the process class that are not loaded",
+    "keywords": ["serializer", "unserializer", "class not found"],
+    "authors": [
+        {
+            "name": "Jeroen van den Heuvel",
+            "email": "jeroen.van.den.heuvel@werkspot.nl"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "jvdh\\Serialization\\": "src"
+        }
+    },
+    "minimum-stability": "stable",
+    "require": {
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.0"
+    }
+}
