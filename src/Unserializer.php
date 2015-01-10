@@ -16,63 +16,52 @@ class Unserializer
         $this->references = [];
     }
 
+    /**
+     * @return mixed
+     * @throws Exception
+     */
     public function unserialize()
     {
         $valueType = $this->serializedData[$this->position];
+
+        // Increase the position by 2: valueType + double dot
         $this->position += 2;
 
-        // TODO: Increase index by 2, because all types are only one character + double dot
-
         switch ($valueType) {
-            case 'b':
-                $result = $this->unserializeBoolean();
-                $this->references[] = $result;
-                break;
+            case SerializedType::TYPE_BOOLEAN:
+                return $this->references[] = $this->parseBoolean();
 
-            case 'N':
-                $result = $this->unserializeNull();
-                $this->references[] = $result;
-                break;
+            case SerializedType::TYPE_NULL:
+                return $this->references[] = $this->parseNull();
 
-            case 's':
-                $result = $this->unserializeString();
-                $this->references[] = $result;
-                break;
+            case SerializedType::TYPE_STRING:
+                return $this->references[] = $this->parseString();
 
-            case 'i':
-                $result = $this->unserializeInteger();
-                $this->references[] = $result;
-                break;
+            case SerializedType::TYPE_INTEGER:
+                return $this->references[] = $this->parseInteger();
 
-            case 'd':
-                $result = $this->unserializeDouble();
-                $this->references[] = $result;
-                break;
+            case SerializedType::TYPE_DOUBLE:
+                return $this->references[] = $this->parseDouble();
 
-            case 'a':
-                $result = $this->unserializeArray();
-                break;
+            case SerializedType::TYPE_ARRAY:
+                return $this->parseArray();
 
-            case 'O':
-                $result = $this->unserializeObject();
-                break;
+            case SerializedType::TYPE_OBJECT:
+                return $this->parseObject();
 
 //            case 'r':
-            case 'R':
-                $result = $this->unserializeReference();
-                break;
+            case SerializedType::TYPE_REFERENCE:
+                return $this->parseReference();
 
             default:
                 throw new Exception(sprintf('Type [%s] is an unsupported type', $valueType));
         }
-
-        return $result;
     }
 
     /**
      * @return bool
      */
-    private function unserializeBoolean()
+    private function parseBoolean()
     {
         $result = $this->serializedData[$this->position] === '1';
 
@@ -81,12 +70,12 @@ class Unserializer
         return $result;
     }
 
-    private function unserializeNull()
+    private function parseNull()
     {
         return null;
     }
 
-    private function unserializeString()
+    private function parseString()
     {
         $endPosition = strpos($this->serializedData, ':', $this->position);
         $stringLength = intval(substr($this->serializedData, $this->position, $endPosition - $this->position));
@@ -98,12 +87,12 @@ class Unserializer
         return $result;
     }
 
-    private function unserializeInteger()
+    private function parseInteger()
     {
         return intval($this->unserializeNumberAsString());
     }
 
-    private function unserializeDouble()
+    private function parseDouble()
     {
         return doubleval($this->unserializeNumberAsString());
     }
@@ -120,7 +109,7 @@ class Unserializer
         return $result;
     }
 
-    private function unserializeArray()
+    private function parseArray()
     {
         $int = $this->readLength();
 
@@ -153,7 +142,7 @@ class Unserializer
 
     // TODO: Rename unserialize to parse
 
-    private function unserializeObject()
+    private function parseObject()
     {
         $classNameLength = $this->readLength();
         $className = substr($this->serializedData, $this->position, $classNameLength);
@@ -175,7 +164,7 @@ class Unserializer
         return $result;
     }
 
-    private function unserializeReference()
+    private function parseReference()
     {
         // TODO: Really return references when
 
