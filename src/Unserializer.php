@@ -9,18 +9,24 @@ class Unserializer
     private $serializedData;
     private $references;
 
-    public function __construct($serializedData)
-    {
-        $this->position = 0;
-        $this->serializedData = $serializedData;
-        $this->references = [];
-    }
-
     /**
      * @return mixed
      * @throws Exception
      */
-    public function unserialize()
+    public function unserialize($serializedData)
+    {
+        $this->position = 0;
+        $this->serializedData = $serializedData;
+        $this->references = [];
+
+        return $this->parse();
+    }
+
+    /**
+     * @return array|bool|float|int|null|string
+     * @throws Exception
+     */
+    private function parse()
     {
         $valueType = $this->serializedData[$this->position];
 
@@ -64,7 +70,6 @@ class Unserializer
     private function parseBoolean()
     {
         $result = $this->serializedData[$this->position] === '1';
-
         $this->position += 2;
 
         return $result;
@@ -117,11 +122,11 @@ class Unserializer
         $this->references[] = &$result;
 
         for ($i=0;$i<$int;$i++) {
-            $key = $this->unserialize();
+            $key = $this->parse();
 
             // Keys can't be a reference
             array_pop($this->references);
-            $value = $this->unserialize();
+            $value = $this->parse();
             $result[$key] = $value;
         }
 
@@ -153,9 +158,9 @@ class Unserializer
         $this->references[] = &$result;
 
         for ($i=0;$i<$propertyLength;$i++) {
-            $key = $this->unserialize();
+            $key = $this->parse();
             array_pop($this->references);
-            $value = $this->unserialize();
+            $value = $this->parse();
             $result[$key] = $value;
         }
 
