@@ -5,8 +5,19 @@ use Exception;
 
 class Unserializer
 {
+    /**
+     * @var int
+     */
     private $position;
+
+    /**
+     * @var string
+     */
     private $serializedData;
+
+    /**
+     * @var array
+     */
     private $references;
 
     /**
@@ -75,11 +86,17 @@ class Unserializer
         return $result;
     }
 
+    /**
+     * @return null
+     */
     private function parseNull()
     {
         return null;
     }
 
+    /**
+     * @return string
+     */
     private function parseString()
     {
         $length = $this->readLength();
@@ -109,6 +126,10 @@ class Unserializer
         return floatval($result);
     }
 
+    /**
+     * @return array
+     * @throws Exception
+     */
     private function parseArray()
     {
         $int = $this->readLength();
@@ -130,6 +151,9 @@ class Unserializer
         return $result;
     }
 
+    /**
+     * @return int
+     */
     private function readLength()
     {
         $delimiter = strpos($this->serializedData, ':', $this->position);
@@ -140,8 +164,10 @@ class Unserializer
         return intval($length);
     }
 
-    // TODO: Rename unserialize to parse
-
+    /**
+     * @return array
+     * @throws Exception
+     */
     private function parseObject()
     {
         $classNameLength = $this->readLength();
@@ -164,6 +190,9 @@ class Unserializer
         return $result;
     }
 
+    /**
+     * @return mixed
+     */
     private function parseReference()
     {
         // TODO: Really return references when
