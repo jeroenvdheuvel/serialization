@@ -77,30 +77,35 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
         $unserializer = new Unserializer();
         $unserializedData = $unserializer->unserialize($serializedData);
 
-//        var_dump($unserializedData);
-//        $this->assertEquals($expectedData, $unserializedData);
+        $this->assertSame($expectedData, $unserializedData);
+//        $this->assertSame(array_keys($expectedData, $expectedData))
     }
 
     public function getSerializedObjectData()
     {
-        $d = new stdClass();
-        $d->a = 1;
-        $d->b = '0123456789';
-        $d->c = true;
-        $d->d = 0.1;
-        $d->e = [1, 'b' => 0.5, 'c' => true];
-        $d->f = 0.1;
-        $d->g = 'one';
-        $d->h = new stdClass();
-        $d->h->aa = 2;
-        $d->h->bb = '1234567890';
-        $d->k = 23;
-        $d->h->cc = 'aas';
-        $d->m = 0.5;
-        $d->h->cc = [2 => 1, 'a' => 'b', 'c' => true, 4];
+        $emptyClass = new stdClass();
 
+        $classWithFourProperties = new stdClass();
+        $classWithFourProperties->firstProperty = 'first property';
+        $classWithFourProperties->secondProperty = 123;
+        $classWithFourProperties->thirdProperty = 45.6;
+        $classWithFourProperties->fourthProperty = false;
+
+        $classWithArrayAsProperty = new stdClass();
+        $classWithArrayAsProperty->arrayProperty = ['array property'];
+
+        $classWithAssociativeArrayAsProperty = new stdClass();
+        $classWithAssociativeArrayAsProperty->arrayProperty = ['first key' => 'first value', 'second key' => 'second value'];
+
+        $classWithClassAsProperty = new stdClass();
+        $classWithClassAsProperty->classProperty = new stdClass();
+        $classWithClassAsProperty->classProperty->anIntegerValue = 1234567890;
         return [
-            $this->getSerializedDataWithExpectedUnserializedDataAsArray($d),
+            [serialize($emptyClass), []],
+            [serialize($classWithFourProperties), ['firstProperty' => 'first property', 'secondProperty' => 123, 'thirdProperty' => 45.6, 'fourthProperty' => false]],
+            [serialize($classWithArrayAsProperty), ['arrayProperty' => ['array property']]],
+            [serialize($classWithAssociativeArrayAsProperty), ['arrayProperty' => ['first key' => 'first value', 'second key' => 'second value']]],
+            [serialize($classWithClassAsProperty), ['classProperty' => ['anIntegerValue' => 1234567890]]],
         ];
     }
 
