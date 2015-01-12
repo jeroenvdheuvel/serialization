@@ -47,7 +47,7 @@ class Unserializer
                 return $this->references[] = $this->parseInteger();
 
             case SerializedType::TYPE_DOUBLE:
-                return $this->references[] = $this->parseDouble();
+                return $this->references[] = $this->parseFloat();
 
             case SerializedType::TYPE_ARRAY:
                 return $this->parseArray();
@@ -82,36 +82,31 @@ class Unserializer
 
     private function parseString()
     {
-        $endPosition = strpos($this->serializedData, ':', $this->position);
-        $stringLength = intval(substr($this->serializedData, $this->position, $endPosition - $this->position));
-        $stringLengthCharacterCount = strlen(strval($stringLength));
-
-        $result = substr($this->serializedData, $this->position + $stringLengthCharacterCount + 2, $stringLength);
-        $this->position +=  $stringLengthCharacterCount + 4 + $stringLength;
+        $length = $this->readLength();
+        $result = substr($this->serializedData, $this->position, $length);
+        $this->position +=  2 + $length;
 
         return $result;
     }
 
+    /**
+     * @return int
+     */
     private function parseInteger()
     {
-        return intval($this->unserializeNumberAsString());
-    }
-
-    private function parseDouble()
-    {
-        return doubleval($this->unserializeNumberAsString());
+        return intval($this->parseFloat());
     }
 
     /**
-     * @return string
+     * @return float
      */
-    private function unserializeNumberAsString()
+    private function parseFloat()
     {
         $endPosition = strpos($this->serializedData, ';', $this->position);
         $result = substr($this->serializedData, $this->position, $endPosition - $this->position);
         $this->position = $endPosition + 1;
 
-        return $result;
+        return floatval($result);
     }
 
     private function parseArray()
