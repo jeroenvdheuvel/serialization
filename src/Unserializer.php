@@ -2,6 +2,7 @@
 namespace jvdh\Serialization;
 
 use Exception;
+use RuntimeException;
 
 class Unserializer
 {
@@ -140,6 +141,8 @@ class Unserializer
         for ($i=0;$i<$int;$i++) {
             $key = $this->parse();
 
+            $this->ensureKeyIsValid($key);
+
             // Keys can't be a reference
             array_pop($this->references);
             $value = $this->parse();
@@ -175,19 +178,41 @@ class Unserializer
         $this->position += $classNameLength + 2;
         $propertyLength = $this->readLength();
 
-        $result = [];
+        $result = new SerializableObject($className);
         $this->references[] = &$result;
 
-        for ($i=0;$i<$propertyLength;$i++) {
+        for ($i=0; $i<$propertyLength; $i++) {
+            // TODO: validate key (for example it could be a double
             $key = $this->parse();
+
+            $this->ensureKeyIsValid($key);
+
+            preg_match('#\\0+(.+)\\0+(.+)$#', $key, $matches);
+            if (count($matches) > 0) {
+                // TODO: Make sure the type of property (private, public, protected) is saved
+//                var_dump($matches[1], $matches[2]);
+                $key = $matches[2];
+            }
+
             array_pop($this->references);
             $value = $this->parse();
+            // TODO: Ditch the complete namespace when it's there (private/protected properties)
             $result[$key] = $value;
         }
 
         $this->position += 1;
 
         return $result;
+    }
+
+    /**
+     * @param string $key
+     */
+    private function ensureKeyIsValid($key)
+    {
+        if (!is_string($key) && !is_int($key)) {
+            throw new RuntimeException('Key is invalid');
+        }
     }
 
     /**
