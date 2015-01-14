@@ -4,7 +4,7 @@ namespace jvdh\Serialization;
 use Exception;
 use RuntimeException;
 
-class Unserializer
+class Unserializer implements UnserializerInterface
 {
     /**
      * @var int
@@ -22,13 +22,12 @@ class Unserializer
     private $references;
 
     /**
-     * @return mixed
-     * @throws Exception
+     * @inheritdoc
      */
-    public function unserialize($serializedData)
+    public function unserialize($data)
     {
         $this->position = 0;
-        $this->serializedData = $serializedData;
+        $this->serializedData = $data;
         $this->references = [];
 
         return $this->parse();
@@ -231,3 +230,6 @@ class Unserializer
         return $this->references[$referenceIndex - 1];
     }
 }
+
+
+// FACTS:
