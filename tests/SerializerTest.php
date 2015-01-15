@@ -83,12 +83,45 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     public function testSerialize_withObject($unserializedData, $expectedData)
     {
         $this->markTestIncomplete();
+        $serializer = new Serializer();
+        $serializedData = $serializer->serialize($unserializedData);
+
+        $this->assertSame($expectedData, $serializedData);
     }
 
     public function getSerializedObjectData()
     {
         return [
-            [null, null],
+            [new SerializableObject('stdClass'), 'O:8:"stdClass":0:{}'],
+            // TODO: Serialize with private properties
+            // TODO: Seriaize with protected properties
+            // TODO: Serialize with public properties
+            // TODO: Serialize with different types: boolean, integer, double, null, array and another object
+        ];
+    }
+
+    /**
+     * @dataProvider getSerializedUnsupportedData
+     *
+     * @expectedException \Exception
+     * @expectedExceptionMessage Unsupported data type
+     *
+     * @param mixed $unserializedData
+     * @throws \Exception
+     */
+    public function testSerialize_withUnsupportedType($unserializedData)
+    {
+        $serializer = new Serializer();
+        $serializer->serialize($unserializedData);
+    }
+
+    /**
+     * @return array
+     */
+    public function getSerializedUnsupportedData()
+    {
+        return [
+            [fopen(__FILE__, 'r')],
         ];
     }
 }

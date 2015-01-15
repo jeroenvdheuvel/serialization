@@ -31,6 +31,7 @@ class Serializer
             return sprintf('%s:%d:{%s}', SerializedType::TYPE_ARRAY, count($data), $arrayDataAsString);
         }
 
-        // TODO: Handle unsupported type, when there is any
+        throw new \Exception('Unsupported data type');
+
     }
 }
