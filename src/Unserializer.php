@@ -71,6 +71,7 @@ class Unserializer implements UnserializerInterface
                 return $this->parseReference();
 
             default:
+                // TODO: Create proper exception
                 throw new Exception(sprintf('Type [%s] is an unsupported type', $valueType));
         }
     }
