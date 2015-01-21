@@ -12,7 +12,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "jvdh\\Serialization\\": "src"
+            "jvdh\\Serialization\\": ""
         }
     },
     "minimum-stability": "stable",

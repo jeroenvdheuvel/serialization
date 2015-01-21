@@ -1,6 +1,8 @@
 <?php
-namespace jvdh\Serialization;
+namespace jvdh\Serialization\Tests;
 
+use jvdh\Serialization\SerializableObject;
+use jvdh\Serialization\Serializer;
 use stdClass;
 
 class SerializerTest extends \PHPUnit_Framework_TestCase

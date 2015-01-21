@@ -1,9 +1,12 @@
 <?php
-namespace jvdh\Serialization;
+namespace jvdh\Serialization\Tests;
 
 use DateTime;
 use DateTimeZone;
 use Exception;
+use jvdh\Serialization\SerializableObject;
+use jvdh\Serialization\TestClassThatCanBeSerializedStub;
+use jvdh\Serialization\Unserializer;
 use ReflectionObject;
 use stdClass;
 
@@ -92,8 +95,6 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
      */
     public function getSerializedObjectData()
     {
-        $emptyClass = new stdClass();
-
         $classWithFourProperties = new stdClass();
         $classWithFourProperties->firstProperty = 'first property';
         $classWithFourProperties->secondProperty = 123;
