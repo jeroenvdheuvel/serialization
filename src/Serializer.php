@@ -29,6 +29,18 @@ class Serializer
             }
 
             return sprintf('%s:%d:{%s}', SerializedType::TYPE_ARRAY, count($data), $arrayDataAsString);
+        } elseif (is_object($data) && $data instanceof SerializableObject) {
+            $serializedString = '';
+            $serializedString .= 'O:' . strlen($data->getClassName()) . ':"' . $data->getClassName() . '":' . count($data->getDataAsArray()) . ':{';
+
+            foreach ($data->getDataAsArray() as $propertyName => $propertyValue) {
+                $serializedString .= $this->serialize($propertyName) . $this->serialize($propertyValue);
+            }
+            $serializedString .= '}';
+
+            return $serializedString;
+            // TODO: For now assume no new objects are added and unserialization is done via the unserializer
+            return 'O:8:"stdClass":0:{}';
         }
 
         // TODO: Create proper exception
