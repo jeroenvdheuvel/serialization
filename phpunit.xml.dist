@@ -11,13 +11,13 @@
          bootstrap                   = "vendor/autoload.php"
 >
     <testsuites>
-        <testsuite name="Chamber of Commerce Retriever Test Suite">
+        <testsuite name="Serialization Test Suite">
             <directory>Tests</directory>
         </testsuite>
     </testsuites>
 
     <filter>
-        <whitelist>
+        <whitelist addUncoveredFilesFromWhitelist="yes">
             <directory>./</directory>
             <exclude>
                 <directory>./Tests</directory>
