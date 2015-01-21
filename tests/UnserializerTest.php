@@ -13,11 +13,11 @@ use stdClass;
 class UnserializerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @dataProvider getSerializedPrimitiveData
+     * @dataProvider getSerializedSimpleData
      *
      * @param string $serializedData
      */
-    public function testUnserialize_withPrimitives($serializedData, $expectedData)
+    public function testUnserialize_withSimpleData($serializedData, $expectedData)
     {
         $unserializer = new Unserializer();
         $unserializedData = $unserializer->unserialize($serializedData);
@@ -25,12 +25,10 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expectedData, $unserializedData);
     }
 
-    // TODO: String not not really a primitive
-
     /**
      * @return array
      */
-    public function getSerializedPrimitiveData()
+    public function getSerializedSimpleData()
     {
         return [
             $this->getSerializedDataWithExpectedUnserializedDataAsArray(true),
@@ -43,13 +41,13 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider getSerializedNonPrimitiveData
+     * @dataProvider getSerializedArrayData
      *
      * @param mixed$serializedData
      * @param string $expectedData
      * @throws \Exception
      */
-    public function testUnserialize_withNonPrimitives($serializedData, $expectedData)
+    public function testUnserialize_withArray($serializedData, $expectedData)
     {
         $unserializer = new Unserializer();
         $unserializedData = $unserializer->unserialize($serializedData);
@@ -57,7 +55,7 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedData, $unserializedData);
     }
 
-    public function getSerializedNonPrimitiveData()
+    public function getSerializedArrayData()
     {
         return [
             $this->getSerializedDataWithExpectedUnserializedDataAsArray([]),

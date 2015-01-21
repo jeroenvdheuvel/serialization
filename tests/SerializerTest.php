@@ -8,12 +8,12 @@ use stdClass;
 class SerializerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @dataProvider getUnserializedPrimitiveData
+     * @dataProvider getUnserializedSimpleData
      *
      * @param mixed $unserializedData
      * @param string $expectedData
      */
-    public function testSerialize_withPrimitives($unserializedData, $expectedData)
+    public function testSerialize_withSimpleData($unserializedData, $expectedData)
     {
         $serializer = new Serializer();
         $serializedData = $serializer->serialize($unserializedData);
@@ -23,13 +23,13 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expectedData, $serializedData);
     }
 
-    public function getUnserializedPrimitiveData()
+    public function getUnserializedSimpleData()
     {
         return [
             $this->getUnserializedDataWithExpectedSerializedDataAsArray(null),
             $this->getUnserializedDataWithExpectedSerializedDataAsArray(123),
             $this->getUnserializedDataWithExpectedSerializedDataAsArray(-456),
-            $this->getUnserializedDataWithExpectedSerializedDataAsArray(7.89), // TODO: Make sure a fixed precision
+            $this->getUnserializedDataWithExpectedSerializedDataAsArray(7.89),
             $this->getUnserializedDataWithExpectedSerializedDataAsArray(0.12),
             $this->getUnserializedDataWithExpectedSerializedDataAsArray(123456789.0),
             $this->getUnserializedDataWithExpectedSerializedDataAsArray(123456789.12),
