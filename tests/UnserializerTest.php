@@ -5,13 +5,33 @@ use DateTime;
 use DateTimeZone;
 use Exception;
 use jvdh\Serialization\SerializableObject;
+use jvdh\Serialization\SerializableObjectProperty;
+use jvdh\Serialization\SerializableObjectPropertyType;
 use jvdh\Serialization\TestClassThatCanBeSerializedStub;
 use jvdh\Serialization\Unserializer;
 use ReflectionObject;
+use ReflectionProperty;
 use stdClass;
 
 class UnserializerTest extends \PHPUnit_Framework_TestCase
 {
+//    public function testByteString()
+//    {
+//        $this->markTestSkipped();
+//        $byteString = '\\000';
+//        $hexString = pack('C', 0);
+//        var_dump(strlen($byteString), $byteString);
+//        var_dump(strlen($hexString), $hexString);
+//
+//        $hexString .= 'abc';
+//        var_dump(strlen($hexString), $hexString);
+//
+//        $hexString2 = pack('C', [0, '*', 0]);
+//        $hexString2 = pack('C', 0, '*', 0);
+//        var_dump(strlen($hexString2), $hexString2);
+//        exit;
+//    }
+
     /**
      * @dataProvider getSerializedSimpleData
      *
@@ -80,6 +100,7 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
     {
         $unserializer = new Unserializer();
         $unserializedData = $unserializer->unserialize($serializedData);
+
 //        var_dump($expectedData, $unserializedData);
 //        var_dump($serializedData);
 //        exit;
@@ -120,7 +141,10 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
 //            [serialize($classWithAssociativeArrayAsProperty), $this->convertObjectToSerializableObject($classWithAssociativeArrayAsProperty)],
 //            [serialize($classWithClassAsProperty), $this->convertObjectToSerializableObject($classWithClassAsProperty)],
 //            [serialize($dateTime), $this->convertObjectToSerializableObject($dateTime)],
-            [serialize($classIsSerialized), $this->convertObjectToSerializableObject($classIsSerialized)],
+//            [serialize($classIsSerialized), $this->convertObjectToSerializableObject($classIsSerialized)],
+//            [serialize(new SerializableStubWithPublicProperties()), $this->convertObjectToSerializableObject(new SerializableStubWithPublicProperties())],
+//            [serialize(new SerializableStubWithPublicAndProtectedProperties()), $this->convertObjectToSerializableObject(new SerializableStubWithPublicAndProtectedProperties())],
+            [serialize(new SerializableStubWithPublicAndProtectedAndPrivateProperties()), $this->convertObjectToSerializableObject(new SerializableStubWithPublicAndProtectedAndPrivateProperties())],
         ];
     }
 
@@ -131,18 +155,34 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
         $serializableObject = new SerializableObject($reflectionObject->getName());
 
         foreach ($reflectionObject->getProperties() as $property) {
-            $property->setAccessible(true);
             $propertyName = $property->getName();
-            $propertyValue = $property->getValue($object);
 
-            if (is_object($propertyValue)) {
-                $propertyValue = $this->convertObjectToSerializableObject($propertyValue);
-            }
-
-            $serializableObject[$propertyName] = $propertyValue;
+            $serializableObject[$propertyName] = $this->getSerializableObjectPropertyByProperty($property, $object);
         }
 
         return $serializableObject;
+    }
+
+    private function getSerializableObjectPropertyByProperty(ReflectionProperty $property, $object)
+    {
+        $property->setAccessible(true);
+
+        $type = $this->getPropertyTypeByProperty($property);
+        $name = $property->getName();
+        $value = $this->getPropertyValueByPropertyAndObject($property, $object);
+
+        return new SerializableObjectProperty($type, $name, $value);
+    }
+
+    private function getPropertyTypeByProperty(ReflectionProperty $property)
+    {
+        if ($property->isPublic()) {
+            return SerializableObjectPropertyType::TYPE_PUBLIC;
+        } else if ($property->isProtected()) {
+            return SerializableObjectPropertyType::TYPE_PROTECTED;
+        } else {
+            return SerializableObjectPropertyType::TYPE_PRIVATE;
+        }
     }
 
     /**
@@ -211,6 +251,22 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
             ['a:1:{d:0.0;s:5:"value";}'],
             ['O:8:"stdClass":1:{d:0.0;i:1;}'],
         ];
+    }
+
+    /**
+     * @param ReflectionProperty $property
+     * @param mixed $object
+     * @return SerializableObject|mixed
+     */
+    private function getPropertyValueByPropertyAndObject(ReflectionProperty $property, $object)
+    {
+        $value = $property->getValue($object);
+
+        if (is_object($value)) {
+            $value = $this->convertObjectToSerializableObject($value);
+        }
+
+        return $value;
     }
 }
 // TODO: Use magic methods

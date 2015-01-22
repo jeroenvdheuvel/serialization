@@ -184,25 +184,31 @@ class Unserializer implements UnserializerInterface
         for ($i=0; $i<$propertyLength; $i++) {
             // TODO: validate key (for example it could be a double
             $key = $this->parse();
-
-            $this->ensureKeyIsValid($key);
-
-            preg_match('#\\0+(.+)\\0+(.+)$#', $key, $matches);
-            if (count($matches) > 0) {
-                // TODO: Make sure the type of property (private, public, protected) is saved
-//                var_dump($matches[1], $matches[2]);
-                $key = $matches[2];
-            }
-
             array_pop($this->references);
             $value = $this->parse();
-            // TODO: Ditch the complete namespace when it's there (private/protected properties)
-            $result[$key] = $value;
+
+            $p = $this->getSerializableObjectPropertyByRawKeyAndValue($key, $value);
+
+            $result[$p->getName()] = $p;
         }
 
         $this->position += 1;
 
         return $result;
+    }
+
+    /**
+     * @param string $key
+     * @param mixed $value
+     * @return SerializableObjectProperty
+     */
+    private function getSerializableObjectPropertyByRawKeyAndValue($key, $value)
+    {
+        $propertyType = $this->getPropertyTypeByKey($key);
+
+        $key = $this->getValidKeyByRaw($key);
+
+        return new SerializableObjectProperty($propertyType, $key, $value);
     }
 
     /**
@@ -229,6 +235,38 @@ class Unserializer implements UnserializerInterface
         $this->position += strlen(strval($referenceIndex)) + 1;
 
         return $this->references[$referenceIndex - 1];
+    }
+
+    /**
+     * @param string $key
+     * @return int
+     */
+    private function getPropertyTypeByKey($key)
+    {
+        if (strpos($key, "\0*\0") === 0) {
+            return SerializableObjectPropertyType::TYPE_PROTECTED;
+        } else if (strpos($key, "\0") === 0) {
+            return SerializableObjectPropertyType::TYPE_PRIVATE;
+        } else {
+            return SerializableObjectPropertyType::TYPE_PUBLIC;
+        }
+    }
+
+    /**
+     * @param string $key
+     * @return string
+     */
+    private function getValidKeyByRaw($key)
+    {
+        $p = strrpos($key, "\0");
+        if ($p !== false) {
+            $key = substr($key, $p + 1);
+            return $key;
+        }
+
+        $this->ensureKeyIsValid($key);
+
+        return $key;
     }
 }
 

@@ -20,7 +20,7 @@ class Serializer
             return serialize($data);
 //            return sprintf('%s:%s;', SerializedType::TYPE_DOUBLE, number_format($data, 16, '.', ''));
         } elseif (is_string($data)) {
-            return sprintf('%s:%d:"%s";', SerializedType::TYPE_STRING, strlen($data), $data);
+            return sprintf('%s:%d:"%s";', SerializedType::TYPE_STRING, mb_strlen($data), $data);
         } elseif (is_array($data)) {
             $arrayDataAsString = '';
             foreach ($data as $key => $value) {
@@ -34,17 +34,31 @@ class Serializer
             $serializedString .= 'O:' . strlen($data->getClassName()) . ':"' . $data->getClassName() . '":' . count($data->getDataAsArray()) . ':{';
 
             foreach ($data->getDataAsArray() as $propertyName => $propertyValue) {
-                $serializedString .= $this->serialize($propertyName) . $this->serialize($propertyValue);
+                $name = $this->serialize($this->getSerializedObjectPropertyName($propertyValue, $data->getClassName()));
+                $value = $this->serialize($propertyValue->getValue());
+                $serializedString .= $name . $value;
             }
             $serializedString .= '}';
 
             return $serializedString;
             // TODO: For now assume no new objects are added and unserialization is done via the unserializer
-            return 'O:8:"stdClass":0:{}';
         }
 
         // TODO: Create proper exception
         throw new \Exception('Unsupported data type');
+    }
 
+    private function getSerializedObjectPropertyName(SerializableObjectProperty $property, $className)
+    {
+        switch ($property->getType()) {
+            case SerializableObjectPropertyType::TYPE_PUBLIC:
+                return $property->getName();
+            case SerializableObjectPropertyType::TYPE_PROTECTED:
+                return "\0*\0" . $property->getName();
+            case SerializableObjectPropertyType::TYPE_PRIVATE:
+                return "\0" . $className . "\0" . $property->getName();
+        }
+
+        throw new \Exception('Unsupported property type');
     }
 }
