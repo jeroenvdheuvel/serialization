@@ -1,11 +1,10 @@
 <?php
 namespace jvdh\Serialization;
 
-class Serializer
+class Serializer implements SerializerInterface
 {
     /**
-     * @param mixed $data
-     * @return string
+     * @inheritdoc
      */
     public function serialize($data)
     {
@@ -16,11 +15,10 @@ class Serializer
         } elseif (is_int($data)) {
             return sprintf('%s:%d;', SerializedType::TYPE_INTEGER, $data);
         } elseif (is_float($data)) {
-            // TODO: Make this cooler by not using the serialize mechanics.
-            return serialize($data);
-//            return sprintf('%s:%s;', SerializedType::TYPE_DOUBLE, number_format($data, 16, '.', ''));
+            return sprintf('%s:%s;', SerializedType::TYPE_DOUBLE, var_export($data, true));
+
         } elseif (is_string($data)) {
-            return sprintf('%s:%d:"%s";', SerializedType::TYPE_STRING, mb_strlen($data), $data);
+            return sprintf('%s:%d:"%s";', SerializedType::TYPE_STRING, strlen($data), $data);
         } elseif (is_array($data)) {
             $arrayDataAsString = '';
             foreach ($data as $key => $value) {
@@ -41,7 +39,6 @@ class Serializer
             $serializedString .= '}';
 
             return $serializedString;
-            // TODO: For now assume no new objects are added and unserialization is done via the unserializer
         }
 
         // TODO: Create proper exception
