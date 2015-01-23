@@ -222,6 +222,7 @@ class Unserializer implements UnserializerInterface
 
     /**
      * @param string $key
+     * @throws InvalidKeyException
      */
     private function ensureKeyIsValid($key)
     {
