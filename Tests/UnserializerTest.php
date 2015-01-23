@@ -5,10 +5,10 @@ use DateTime;
 use DateTimeZone;
 use Exception;
 use jvdh\Serialization\Serializable\LockableObject;
-use jvdh\Serialization\Serializable\Object;
 use jvdh\Serialization\Serializable\PrivateObjectProperty;
 use jvdh\Serialization\Serializable\ProtectedObjectProperty;
 use jvdh\Serialization\Serializable\PublicObjectProperty;
+use jvdh\Serialization\Stub\StubObjectWithPublicAndProtectedAndPrivateProperties;
 use jvdh\Serialization\Unserializer;
 use ReflectionObject;
 use ReflectionProperty;
@@ -123,7 +123,7 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
 //            [serialize($classIsSerialized), $this->convertObjectToSerializableObject($classIsSerialized)],
 //            [serialize(new SerializableStubWithPublicProperties()), $this->convertObjectToSerializableObject(new SerializableStubWithPublicProperties())],
 //            [serialize(new SerializableStubWithPublicAndProtectedProperties()), $this->convertObjectToSerializableObject(new SerializableStubWithPublicAndProtectedProperties())],
-            [serialize(new SerializableStubWithPublicAndProtectedAndPrivateProperties()), $this->convertObjectToSerializableObject(new SerializableStubWithPublicAndProtectedAndPrivateProperties())],
+            [serialize(new StubObjectWithPublicAndProtectedAndPrivateProperties()), $this->convertObjectToSerializableObject(new StubObjectWithPublicAndProtectedAndPrivateProperties())],
         ];
     }
 
