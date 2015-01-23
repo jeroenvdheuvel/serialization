@@ -2,6 +2,7 @@
 namespace jvdh\Serialization\Tests\Serializable;
 
 use jvdh\Serialization\Serializable\Object;
+use jvdh\Serialization\Serializable\ObjectProperty;
 use jvdh\Serialization\Serializable\PrivateObjectProperty;
 use jvdh\Serialization\Serializable\ProtectedObjectProperty;
 use jvdh\Serialization\Serializable\PublicObjectProperty;
@@ -18,16 +19,39 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider getAddPropertyData
      *
-     * @param array $properties
+     * @param array|ObjectProperty[] $expectedProperties
      */
-    public function testAddProperty(array $properties)
+    public function testAddProperty(array $expectedProperties)
     {
         $o = new Object('class name');
-        foreach ($properties as $property) {
+        foreach ($expectedProperties as $property) {
             $o->addProperty($property);
         }
 
-        $this->assertSame($properties, array_values($o->getDataAsArray()));
+        $i = 0;
+        foreach ($o as $key => $property) {
+            $expectedProperty = $expectedProperties[$i];
+            $this->assertSame($expectedProperty, $property);
+            $this->assertSame($expectedProperty->getName(), $key);
+            $i ++;
+        }
+
+        $this->assertSame(count($expectedProperties), $i);
+    }
+
+    /**
+     * @dataProvider getAddPropertyData
+     *
+     * @param array|ObjectProperty[] $expectedProperties
+     */
+    public function testCount(array $expectedProperties)
+    {
+        $o = new Object('class name');
+        foreach ($expectedProperties as $property) {
+            $o->addProperty($property);
+        }
+
+        $this->assertCount(count($expectedProperties), $o);
     }
 
     /**
@@ -56,3 +80,5 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 
 // TODO: Make object lockable
 // Make it possible to iterate
+// TODO: Set property value
+// TODO: Get property value

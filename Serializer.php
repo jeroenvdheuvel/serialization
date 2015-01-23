@@ -37,9 +37,9 @@ class Serializer implements SerializerInterface
             return sprintf('%s:%d:{%s}', SerializedType::TYPE_ARRAY, count($data), $arrayDataAsString);
         } elseif (is_object($data) && $data instanceof Object) {
             $serializedString = '';
-            $serializedString .= 'O:' . strlen($data->getClassName()) . ':"' . $data->getClassName() . '":' . count($data->getDataAsArray()) . ':{';
+            $serializedString .= 'O:' . strlen($data->getClassName()) . ':"' . $data->getClassName() . '":' . count($data) . ':{';
 
-            foreach ($data->getDataAsArray() as $propertyName => $propertyValue) {
+            foreach ($data as $propertyName => $propertyValue) {
                 $name = $this->serialize($this->getSerializedObjectPropertyName($propertyValue, $data->getClassName()));
                 $value = $this->serialize($propertyValue->getValue());
                 $serializedString .= $name . $value;

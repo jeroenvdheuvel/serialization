@@ -1,11 +1,11 @@
 <?php
 namespace jvdh\Serialization\Serializable;
 
-use ArrayAccess;
+use Countable;
 use Iterator;
 use jvdh\Serialization\Exception\PropertyNameAlreadyClaimedException;
 
-class Object //implements Iterator
+class Object implements Countable, Iterator // TODO: Check if countable is needed when iterator is implemented
 {
     /**
      * @var string
@@ -35,14 +35,6 @@ class Object //implements Iterator
     }
 
     /**
-     * @return array
-     */
-    public function getDataAsArray()
-    {
-        return $this->data;
-    }
-
-    /**
      * @param ObjectProperty $property
      */
     public function addProperty(ObjectProperty $property)
@@ -53,5 +45,54 @@ class Object //implements Iterator
 
         // TODO: Check if object is locked
         $this->data[$property->getName()] = $property;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function count()
+    {
+        return count($this->data);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function current()
+    {
+        return current($this->data);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function next()
+    {
+        return next($this->data);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function key()
+    {
+        return key($this->data);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function valid()
+    {
+        $key = $this->key();
+        return $key !== null && $key !== false;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function rewind()
+    {
+        reset($this->data);
     }
 }
