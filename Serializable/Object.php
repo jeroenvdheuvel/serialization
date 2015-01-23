@@ -4,6 +4,7 @@ namespace jvdh\Serialization\Serializable;
 use Countable;
 use Iterator;
 use jvdh\Serialization\Exception\PropertyNameAlreadyClaimedException;
+use jvdh\Serialization\Exception\PropertyNameDoesNotExistException;
 
 class Object implements Countable, Iterator // TODO: Check if countable is needed when iterator is implemented
 {
@@ -13,7 +14,7 @@ class Object implements Countable, Iterator // TODO: Check if countable is neede
     private $className;
 
     /**
-     * @var array
+     * @var array|ObjectProperty[]
      */
     private $data;
 
@@ -45,6 +46,16 @@ class Object implements Countable, Iterator // TODO: Check if countable is neede
 
         // TODO: Check if object is locked
         $this->data[$property->getName()] = $property;
+    }
+
+
+    public function getPropertyValueByName($name)
+    {
+        if (!array_key_exists($name, $this->data)) {
+            throw new PropertyNameDoesNotExistException($name);
+        }
+
+        return $this->data[$name]->getValue();
     }
 
     /**

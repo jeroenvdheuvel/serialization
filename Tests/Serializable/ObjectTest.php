@@ -23,16 +23,19 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
      */
     public function testAddProperty(array $expectedProperties)
     {
-        $o = new Object('class name');
+        $o = $this->getObject();
         foreach ($expectedProperties as $property) {
             $o->addProperty($property);
         }
 
         $i = 0;
+
         foreach ($o as $key => $property) {
             $expectedProperty = $expectedProperties[$i];
+
             $this->assertSame($expectedProperty, $property);
             $this->assertSame($expectedProperty->getName(), $key);
+
             $i ++;
         }
 
@@ -46,7 +49,8 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
      */
     public function testCount(array $expectedProperties)
     {
-        $o = new Object('class name');
+        $o = $this->getObject();
+
         foreach ($expectedProperties as $property) {
             $o->addProperty($property);
         }
@@ -71,10 +75,35 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
      */
     public function testAddProperty_withSameNameThrowsException()
     {
-        $o = new Object('class name');
+        $o = $this->getObject();
         $propertyName = 'p1';
         $o->addProperty(new PrivateObjectProperty($propertyName, 1));
         $o->addProperty(new ProtectedObjectProperty($propertyName, 2));
+    }
+
+    public function testGetPropertyValue_thatExistsReturnsValue()
+    {
+        $o = $this->getObject();
+        $p = new NonexistentObjectPropertyStub();
+        $o->addProperty($p);
+
+        $this->assertSame($p->getValue(), $o->getPropertyValueByName($p->getName()));
+    }
+
+    /**
+     * @expectedException \jvdh\Serialization\Exception\PropertyNameDoesNotExistException
+     */
+    public function testGetPropertyValue_thatDoesNotExistsThrowsException()
+    {
+        $this->getObject()->getPropertyValueByName('nonexistent property');
+    }
+
+    /**
+     * @return Object
+     */
+    private function getObject()
+    {
+        return new Object('class name');
     }
 }
 
