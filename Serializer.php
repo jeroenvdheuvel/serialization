@@ -24,34 +24,57 @@ class Serializer implements SerializerInterface
             return sprintf('%s:%d;', SerializedType::TYPE_INTEGER, $data);
         } elseif (is_float($data)) {
             return sprintf('%s:%s;', SerializedType::TYPE_DOUBLE, var_export($data, true));
-
         } elseif (is_string($data)) {
             return sprintf('%s:%d:"%s";', SerializedType::TYPE_STRING, strlen($data), $data);
         } elseif (is_array($data)) {
-            $arrayDataAsString = '';
-            foreach ($data as $key => $value) {
-                $arrayDataAsString .= $this->serialize($key);
-                $arrayDataAsString .= $this->serialize($value);
-            }
-
-            return sprintf('%s:%d:{%s}', SerializedType::TYPE_ARRAY, count($data), $arrayDataAsString);
+            return $this->serializeArray($data);
         } elseif (is_object($data) && $data instanceof Object) {
-            $serializedString = '';
-            $serializedString .= 'O:' . strlen($data->getClassName()) . ':"' . $data->getClassName() . '":' . count($data) . ':{';
-
-            foreach ($data as $propertyName => $propertyValue) {
-                $name = $this->serialize($this->getSerializedObjectPropertyName($propertyValue, $data->getClassName()));
-                $value = $this->serialize($propertyValue->getValue());
-                $serializedString .= $name . $value;
-            }
-            $serializedString .= '}';
-
-            return $serializedString;
+            return $this->serializeObject($data);
         }
 
         throw new UnsupportedDataTypeException();
     }
 
+    /**
+     * @param array $data
+     * @return string
+     */
+    private function serializeArray(array $data)
+    {
+        $arrayDataAsString = '';
+        foreach ($data as $key => $value) {
+            $arrayDataAsString .= $this->serialize($key);
+            $arrayDataAsString .= $this->serialize($value);
+        }
+
+        return sprintf('%s:%d:{%s}', SerializedType::TYPE_ARRAY, count($data), $arrayDataAsString);
+    }
+
+    /**
+     * @param Object|ObjectProperty[] $data
+     * @return string
+     */
+    private function serializeObject(Object $data)
+    {
+        $serializedString = '';
+        $serializedString .= 'O:' . strlen($data->getClassName()) . ':"' . $data->getClassName() . '":' . count($data) . ':{';
+
+        foreach ($data as $propertyValue) {
+            $name = $this->serialize($this->getSerializedObjectPropertyName($propertyValue, $data->getClassName()));
+            $value = $this->serialize($propertyValue->getValue());
+            $serializedString .= $name . $value;
+        }
+        $serializedString .= '}';
+
+        return $serializedString;
+    }
+
+    /**
+     * @param ObjectProperty $property
+     * @param string $className
+     * @return string
+     * @throws UnsupportedPropertyTypeException
+     */
     private function getSerializedObjectPropertyName(ObjectProperty $property, $className)
     {
         switch ($property->getType()) {
