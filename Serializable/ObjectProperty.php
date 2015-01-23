@@ -1,26 +1,25 @@
 <?php
 namespace jvdh\Serialization\Serializable;
 
-class ObjectProperty
+abstract class ObjectProperty
 {
-    private $type;
     private $name;
     private $value;
 
-    public function __construct($type, $name, $value)
+    /**
+     * @param string $name
+     * @param mixed $value
+     */
+    public function __construct($name, $value)
     {
-        $this->type = $type;
         $this->name = $name;
         $this->value = $value;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getType()
-    {
-        return $this->type;
-    }
+    abstract public function getType();
 
     /**
      * @return mixed

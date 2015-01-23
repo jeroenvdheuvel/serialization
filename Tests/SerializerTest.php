@@ -3,6 +3,9 @@ namespace jvdh\Serialization\Tests;
 
 use jvdh\Serialization\Serializable\Object;
 use jvdh\Serialization\Serializable\ObjectProperty;
+use jvdh\Serialization\Serializable\PrivateObjectProperty;
+use jvdh\Serialization\Serializable\ProtectedObjectProperty;
+use jvdh\Serialization\Serializable\PublicObjectProperty;
 use jvdh\Serialization\SerializableObjectPropertyType;
 use jvdh\Serialization\Serializer;
 use stdClass;
@@ -20,8 +23,6 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $serializer = new Serializer();
         $serializedData = $serializer->serialize($unserializedData);
 
-//        var_dump($expectedData);
-//        var_dump(floatval($unserializedData));
         $this->assertSame($expectedData, $serializedData);
     }
 
@@ -117,11 +118,11 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $serializedObject4['integer'] = 5;
 
         $serializedObject5 = new Object('jvdh\Serialization\Tests\SerializableStubWithPublicAndProtectedAndPrivateProperties');
-        $serializedObject5['privatePropertyOne'] = new ObjectProperty(SerializableObjectPropertyType::TYPE_PRIVATE, 'privatePropertyOne', 0.1);
-        $serializedObject5['protectedPropertyOne'] = new ObjectProperty(SerializableObjectPropertyType::TYPE_PROTECTED, 'protectedPropertyOne', 'one');
-        $serializedObject5['protectedPropertyTwo'] = new ObjectProperty(SerializableObjectPropertyType::TYPE_PROTECTED, 'protectedPropertyTwo', null);
-        $serializedObject5['publicPropertyOne'] = new ObjectProperty(SerializableObjectPropertyType::TYPE_PUBLIC, 'publicPropertyOne', true);
-        $serializedObject5['publicPropertyTwo'] = new ObjectProperty(SerializableObjectPropertyType::TYPE_PUBLIC, 'publicPropertyTwo', 12);
+        $serializedObject5['privatePropertyOne'] = new PrivateObjectProperty('privatePropertyOne', 0.1);
+        $serializedObject5['protectedPropertyOne'] = new ProtectedObjectProperty('protectedPropertyOne', 'one');
+        $serializedObject5['protectedPropertyTwo'] = new ProtectedObjectProperty('protectedPropertyTwo', null);
+        $serializedObject5['publicPropertyOne'] = new PublicObjectProperty('publicPropertyOne', true);
+        $serializedObject5['publicPropertyTwo'] = new PublicObjectProperty('publicPropertyTwo', 12);
 
         return [
             [new Object('stdClass'), 'O:8:"stdClass":0:{}'],

@@ -4,6 +4,9 @@ namespace jvdh\Serialization;
 use jvdh\Serialization\Exception\UnsupportedDataTypeException;
 use jvdh\Serialization\Serializable\Object;
 use jvdh\Serialization\Serializable\ObjectProperty;
+use jvdh\Serialization\Serializable\PrivateObjectProperty;
+use jvdh\Serialization\Serializable\ProtectedObjectProperty;
+use jvdh\Serialization\Serializable\PublicObjectProperty;
 
 class Serializer implements SerializerInterface
 {
@@ -51,11 +54,13 @@ class Serializer implements SerializerInterface
     private function getSerializedObjectPropertyName(ObjectProperty $property, $className)
     {
         switch ($property->getType()) {
-            case SerializableObjectPropertyType::TYPE_PUBLIC:
+            case PublicObjectProperty::TYPE:
                 return $property->getName();
-            case SerializableObjectPropertyType::TYPE_PROTECTED:
+
+            case ProtectedObjectProperty::TYPE:
                 return "\0*\0" . $property->getName();
-            case SerializableObjectPropertyType::TYPE_PRIVATE:
+
+            case PrivateObjectProperty::TYPE:
                 return "\0" . $className . "\0" . $property->getName();
         }
 

@@ -6,6 +6,9 @@ use DateTimeZone;
 use Exception;
 use jvdh\Serialization\Serializable\Object;
 use jvdh\Serialization\Serializable\ObjectProperty;
+use jvdh\Serialization\Serializable\PrivateObjectProperty;
+use jvdh\Serialization\Serializable\ProtectedObjectProperty;
+use jvdh\Serialization\Serializable\PublicObjectProperty;
 use jvdh\Serialization\SerializableObjectPropertyType;
 use jvdh\Serialization\TestClassThatCanBeSerializedStub;
 use jvdh\Serialization\Unserializer;
@@ -146,21 +149,15 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
     {
         $property->setAccessible(true);
 
-        $type = $this->getPropertyTypeByProperty($property);
         $name = $property->getName();
         $value = $this->getPropertyValueByPropertyAndObject($property, $object);
 
-        return new ObjectProperty($type, $name, $value);
-    }
-
-    private function getPropertyTypeByProperty(ReflectionProperty $property)
-    {
         if ($property->isPublic()) {
-            return SerializableObjectPropertyType::TYPE_PUBLIC;
+            return new PublicObjectProperty($name, $value);
         } else if ($property->isProtected()) {
-            return SerializableObjectPropertyType::TYPE_PROTECTED;
+            return new ProtectedObjectProperty($name, $value);
         } else {
-            return SerializableObjectPropertyType::TYPE_PRIVATE;
+            return new PrivateObjectProperty($name, $value);
         }
     }
 

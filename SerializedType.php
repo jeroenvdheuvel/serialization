@@ -1,8 +1,6 @@
 <?php
 namespace jvdh\Serialization;
 
-use SplString;
-
 class SerializedType
 {
     const TYPE_BOOLEAN = 'b';

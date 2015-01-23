@@ -6,6 +6,9 @@ use jvdh\Serialization\Exception\InvalidKeyException;
 use jvdh\Serialization\Exception\UnsupportedSerializedVariableTypeException;
 use jvdh\Serialization\Serializable\Object;
 use jvdh\Serialization\Serializable\ObjectProperty;
+use jvdh\Serialization\Serializable\PrivateObjectProperty;
+use jvdh\Serialization\Serializable\ProtectedObjectProperty;
+use jvdh\Serialization\Serializable\PublicObjectProperty;
 
 class Unserializer implements UnserializerInterface
 {
@@ -198,17 +201,21 @@ class Unserializer implements UnserializerInterface
     }
 
     /**
-     * @param string $key
+     * @param string $rawKey
      * @param mixed $value
      * @return ObjectProperty
      */
-    private function getSerializableObjectPropertyByRawKeyAndValue($key, $value)
+    private function getSerializableObjectPropertyByRawKeyAndValue($rawKey, $value)
     {
-        $propertyType = $this->getPropertyTypeByKey($key);
+        $key = $this->getValidKeyByRawKey($rawKey);
 
-        $key = $this->getValidKeyByRawKey($key);
-
-        return new ObjectProperty($propertyType, $key, $value);
+        if (strpos($rawKey, "\0*\0") === 0) {
+            return new ProtectedObjectProperty($key, $value);
+        } else if (strpos($rawKey, "\0") === 0) {
+            return new PrivateObjectProperty($key, $value);
+        } else {
+            return new PublicObjectProperty($key, $value);
+        }
     }
 
     /**
@@ -235,21 +242,6 @@ class Unserializer implements UnserializerInterface
         $this->position += strlen(strval($referenceIndex)) + 1;
 
         return $this->references[$referenceIndex - 1];
-    }
-
-    /**
-     * @param string $key
-     * @return int
-     */
-    private function getPropertyTypeByKey($key)
-    {
-        if (strpos($key, "\0*\0") === 0) {
-            return SerializableObjectPropertyType::TYPE_PROTECTED;
-        } else if (strpos($key, "\0") === 0) {
-            return SerializableObjectPropertyType::TYPE_PRIVATE;
-        } else {
-            return SerializableObjectPropertyType::TYPE_PUBLIC;
-        }
     }
 
     /**
