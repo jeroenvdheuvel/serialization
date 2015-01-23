@@ -1,7 +1,7 @@
 <?php
 namespace jvdh\Serialization\Tests;
 
-use jvdh\Serialization\SerializableObject;
+use jvdh\Serialization\Serializable\SerializableObject;
 use jvdh\Serialization\SerializableObjectProperty;
 use jvdh\Serialization\SerializableObjectPropertyType;
 use jvdh\Serialization\Serializer;
@@ -139,8 +139,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider getSerializedUnsupportedData
      *
-     * @expectedException \Exception
-     * @expectedExceptionMessage Unsupported data type
+     * @expectedException \jvdh\Serialization\Exception\UnsupportedDataTypeException
      *
      * @param mixed $unserializedData
      * @throws \Exception

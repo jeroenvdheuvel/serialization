@@ -1,6 +1,9 @@
 <?php
 namespace jvdh\Serialization;
 
+use jvdh\Serialization\Exception\UnsupportedDataTypeException;
+use jvdh\Serialization\Serializable\SerializableObject;
+
 class Serializer implements SerializerInterface
 {
     /**
@@ -41,8 +44,7 @@ class Serializer implements SerializerInterface
             return $serializedString;
         }
 
-        // TODO: Create proper exception
-        throw new \Exception('Unsupported data type');
+        throw new UnsupportedDataTypeException();
     }
 
     private function getSerializedObjectPropertyName(SerializableObjectProperty $property, $className)

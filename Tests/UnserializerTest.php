@@ -4,7 +4,7 @@ namespace jvdh\Serialization\Tests;
 use DateTime;
 use DateTimeZone;
 use Exception;
-use jvdh\Serialization\SerializableObject;
+use jvdh\Serialization\Serializable\SerializableObject;
 use jvdh\Serialization\SerializableObjectProperty;
 use jvdh\Serialization\SerializableObjectPropertyType;
 use jvdh\Serialization\TestClassThatCanBeSerializedStub;
