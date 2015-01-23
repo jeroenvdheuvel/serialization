@@ -4,7 +4,7 @@ namespace jvdh\Serialization\Tests;
 use DateTime;
 use DateTimeZone;
 use Exception;
-use jvdh\Serialization\Serializable\SerializableObject;
+use jvdh\Serialization\Serializable\Object;
 use jvdh\Serialization\SerializableObjectProperty;
 use jvdh\Serialization\SerializableObjectPropertyType;
 use jvdh\Serialization\TestClassThatCanBeSerializedStub;
@@ -131,7 +131,7 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
     {
         $reflectionObject = new ReflectionObject($object);
 
-        $serializableObject = new SerializableObject($reflectionObject->getName());
+        $serializableObject = new Object($reflectionObject->getName());
 
         foreach ($reflectionObject->getProperties() as $property) {
             $propertyName = $property->getName();
@@ -235,7 +235,7 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @param ReflectionProperty $property
      * @param mixed $object
-     * @return SerializableObject|mixed
+     * @return Object|mixed
      */
     private function getPropertyValueByPropertyAndObject(ReflectionProperty $property, $object)
     {

@@ -2,7 +2,7 @@
 namespace jvdh\Serialization;
 
 use jvdh\Serialization\Exception\UnsupportedDataTypeException;
-use jvdh\Serialization\Serializable\SerializableObject;
+use jvdh\Serialization\Serializable\Object;
 
 class Serializer implements SerializerInterface
 {
@@ -30,7 +30,7 @@ class Serializer implements SerializerInterface
             }
 
             return sprintf('%s:%d:{%s}', SerializedType::TYPE_ARRAY, count($data), $arrayDataAsString);
-        } elseif (is_object($data) && $data instanceof SerializableObject) {
+        } elseif (is_object($data) && $data instanceof Object) {
             $serializedString = '';
             $serializedString .= 'O:' . strlen($data->getClassName()) . ':"' . $data->getClassName() . '":' . count($data->getDataAsArray()) . ':{';
 

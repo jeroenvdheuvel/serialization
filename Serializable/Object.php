@@ -3,7 +3,7 @@ namespace jvdh\Serialization\Serializable;
 
 use ArrayAccess;
 
-class SerializableObject implements ArrayAccess
+class Object implements ArrayAccess
 {
     /**
      * @var string

@@ -1,7 +1,7 @@
 <?php
 namespace jvdh\Serialization\Tests;
 
-use jvdh\Serialization\Serializable\SerializableObject;
+use jvdh\Serialization\Serializable\Object;
 use jvdh\Serialization\SerializableObjectProperty;
 use jvdh\Serialization\SerializableObjectPropertyType;
 use jvdh\Serialization\Serializer;
@@ -98,10 +98,10 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     {
         $t = new stdClass();
         $t->firstProperty = 'firstValue';
-        $serializedObject2 = new SerializableObject('stdClass');
+        $serializedObject2 = new Object('stdClass');
         $serializedObject2['firstProperty'] = 'firstValue';
 
-        $serializedObject3 = new SerializableObject('stdClass');
+        $serializedObject3 = new Object('stdClass');
         $serializedObject3['null'] = null;
         $serializedObject3['integer'] = 2;
         $serializedObject3['negativeInteger'] = -1337;
@@ -111,12 +111,12 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $serializedObject3['array'] = ['first value', 'second key' => 'second value'];
 
 
-        $serializedObject4 = new SerializableObject('stdClass');
+        $serializedObject4 = new Object('stdClass');
         $serializedObject4['boolean'] = true;
         $serializedObject4['anotherObject'] = $serializedObject2;
         $serializedObject4['integer'] = 5;
 
-        $serializedObject5 = new SerializableObject('jvdh\Serialization\Tests\SerializableStubWithPublicAndProtectedAndPrivateProperties');
+        $serializedObject5 = new Object('jvdh\Serialization\Tests\SerializableStubWithPublicAndProtectedAndPrivateProperties');
         $serializedObject5['privatePropertyOne'] = new SerializableObjectProperty(SerializableObjectPropertyType::TYPE_PRIVATE, 'privatePropertyOne', 0.1);
         $serializedObject5['protectedPropertyOne'] = new SerializableObjectProperty(SerializableObjectPropertyType::TYPE_PROTECTED, 'protectedPropertyOne', 'one');
         $serializedObject5['protectedPropertyTwo'] = new SerializableObjectProperty(SerializableObjectPropertyType::TYPE_PROTECTED, 'protectedPropertyTwo', null);
@@ -124,7 +124,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $serializedObject5['publicPropertyTwo'] = new SerializableObjectProperty(SerializableObjectPropertyType::TYPE_PUBLIC, 'publicPropertyTwo', 12);
 
         return [
-            [new SerializableObject('stdClass'), 'O:8:"stdClass":0:{}'],
+            [new Object('stdClass'), 'O:8:"stdClass":0:{}'],
 
 //            [$serializedObject2, 'O:8:"stdClass":1:{s:13:"firstProperty";s:10:"firstValue";}'],
 //            [$serializedObject3, 'O:8:"stdClass":7:{s:4:"null";N;s:7:"integer";i:2;s:15:"negativeInteger";i:-1337;s:5:"float";d:13.369999999999999;s:7:"boolean";b:1;s:6:"string";s:8:"a string";s:5:"array";a:2:{i:0;s:11:"first value";s:10:"second key";s:12:"second value";}}'],

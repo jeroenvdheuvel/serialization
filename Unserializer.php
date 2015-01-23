@@ -4,7 +4,7 @@ namespace jvdh\Serialization;
 use Exception;
 use jvdh\Serialization\Exception\InvalidKeyException;
 use jvdh\Serialization\Exception\UnsupportedSerializedVariableTypeException;
-use jvdh\Serialization\Serializable\SerializableObject;
+use jvdh\Serialization\Serializable\Object;
 
 class Unserializer implements UnserializerInterface
 {
@@ -178,7 +178,7 @@ class Unserializer implements UnserializerInterface
         $this->position += $classNameLength + 2;
         $propertyLength = $this->readLength();
 
-        $result = new SerializableObject($className);
+        $result = new Object($className);
         $this->references[] = &$result;
 
         for ($i=0; $i<$propertyLength; $i++) {
