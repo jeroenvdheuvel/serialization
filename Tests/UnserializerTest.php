@@ -8,7 +8,6 @@ use jvdh\Serialization\Serializable\Object;
 use jvdh\Serialization\Serializable\PrivateObjectProperty;
 use jvdh\Serialization\Serializable\ProtectedObjectProperty;
 use jvdh\Serialization\Serializable\PublicObjectProperty;
-use jvdh\Serialization\TestClassThatCanBeSerializedStub;
 use jvdh\Serialization\Unserializer;
 use ReflectionObject;
 use ReflectionProperty;
@@ -111,7 +110,6 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
         $classWithClassAsProperty->classProperty->anIntegerValue = 1234567890;
 
         $dateTime = new DateTime('2014-01-01 13:37:00', new DateTimeZone('Europe/Amsterdam'));
-        $classIsSerialized = new TestClassThatCanBeSerializedStub($dateTime);
 
         return [
 //            [serialize($emptyClass), $this->convertObjectToSerializableObject($emptyClass)],
@@ -135,9 +133,7 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
         $serializableObject = new Object($reflectionObject->getName());
 
         foreach ($reflectionObject->getProperties() as $property) {
-            $propertyName = $property->getName();
-
-            $serializableObject[$propertyName] = $this->getSerializableObjectPropertyByProperty($property, $object);
+            $serializableObject->addProperty($this->getSerializableObjectPropertyByProperty($property, $object));
         }
 
         return $serializableObject;

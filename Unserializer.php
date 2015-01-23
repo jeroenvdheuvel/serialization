@@ -192,7 +192,7 @@ class Unserializer implements UnserializerInterface
 
             $p = $this->getSerializableObjectPropertyByRawKeyAndValue($key, $value);
 
-            $result[$p->getName()] = $p;
+            $result->addProperty($p);
         }
 
         $this->position += 1;

@@ -2,8 +2,10 @@
 namespace jvdh\Serialization\Serializable;
 
 use ArrayAccess;
+use Iterator;
+use jvdh\Serialization\Exception\PropertyNameAlreadyClaimedException;
 
-class Object implements ArrayAccess
+class Object //implements Iterator
 {
     /**
      * @var string
@@ -41,34 +43,15 @@ class Object implements ArrayAccess
     }
 
     /**
-     * {@inheritdoc}
+     * @param ObjectProperty $property
      */
-    public function offsetExists($offset)
+    public function addProperty(ObjectProperty $property)
     {
-        return isset($this->data[$offset]);
-    }
+        if (array_key_exists($property->getName(), $this->data)) {
+            throw new PropertyNameAlreadyClaimedException($property->getName());
+        }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function offsetGet($offset)
-    {
-        return $this->data[$offset];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function offsetSet($offset, $value)
-    {
-        return $this->data[$offset] = $value;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function offsetUnset($offset)
-    {
-        unset($this->data[$offset]);
+        // TODO: Check if object is locked
+        $this->data[$property->getName()] = $property;
     }
 }

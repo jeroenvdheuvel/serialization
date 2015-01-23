@@ -96,35 +96,35 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
 
     public function getSerializedObjectData()
     {
-        $t = new stdClass();
-        $t->firstProperty = 'firstValue';
-        $serializedObject2 = new Object('stdClass');
-        $serializedObject2['firstProperty'] = 'firstValue';
-
-        $serializedObject3 = new Object('stdClass');
-        $serializedObject3['null'] = null;
-        $serializedObject3['integer'] = 2;
-        $serializedObject3['negativeInteger'] = -1337;
-        $serializedObject3['float'] = 13.37;
-        $serializedObject3['boolean'] = true;
-        $serializedObject3['string'] = 'a string';
-        $serializedObject3['array'] = ['first value', 'second key' => 'second value'];
-
-
-        $serializedObject4 = new Object('stdClass');
-        $serializedObject4['boolean'] = true;
-        $serializedObject4['anotherObject'] = $serializedObject2;
-        $serializedObject4['integer'] = 5;
+//        $t = new stdClass();
+//        $t->firstProperty = 'firstValue';
+//        $serializedObject2 = new Object('stdClass');
+//        $serializedObject2['firstProperty'] = 'firstValue';
+//
+//        $serializedObject3 = new Object('stdClass');
+//        $serializedObject3['null'] = null;
+//        $serializedObject3['integer'] = 2;
+//        $serializedObject3['negativeInteger'] = -1337;
+//        $serializedObject3['float'] = 13.37;
+//        $serializedObject3['boolean'] = true;
+//        $serializedObject3['string'] = 'a string';
+//        $serializedObject3['array'] = ['first value', 'second key' => 'second value'];
+//
+//
+//        $serializedObject4 = new Object('stdClass');
+//        $serializedObject4['boolean'] = true;
+//        $serializedObject4['anotherObject'] = $serializedObject2;
+//        $serializedObject4['integer'] = 5;
 
         $serializedObject5 = new Object('jvdh\Serialization\Tests\SerializableStubWithPublicAndProtectedAndPrivateProperties');
-        $serializedObject5['privatePropertyOne'] = new PrivateObjectProperty('privatePropertyOne', 0.1);
-        $serializedObject5['protectedPropertyOne'] = new ProtectedObjectProperty('protectedPropertyOne', 'one');
-        $serializedObject5['protectedPropertyTwo'] = new ProtectedObjectProperty('protectedPropertyTwo', null);
-        $serializedObject5['publicPropertyOne'] = new PublicObjectProperty('publicPropertyOne', true);
-        $serializedObject5['publicPropertyTwo'] = new PublicObjectProperty('publicPropertyTwo', 12);
+        $serializedObject5->addProperty(new PrivateObjectProperty('privatePropertyOne', 0.1));
+        $serializedObject5->addProperty(new ProtectedObjectProperty('protectedPropertyOne', 'one'));
+        $serializedObject5->addProperty(new ProtectedObjectProperty('protectedPropertyTwo', null));
+        $serializedObject5->addProperty(new PublicObjectProperty('publicPropertyOne', true));
+        $serializedObject5->addProperty(new PublicObjectProperty('publicPropertyTwo', 12));
 
         return [
-            [new Object('stdClass'), 'O:8:"stdClass":0:{}'],
+//            [new Object('stdClass'), 'O:8:"stdClass":0:{}'],
 
 //            [$serializedObject2, 'O:8:"stdClass":1:{s:13:"firstProperty";s:10:"firstValue";}'],
 //            [$serializedObject3, 'O:8:"stdClass":7:{s:4:"null";N;s:7:"integer";i:2;s:15:"negativeInteger";i:-1337;s:5:"float";d:13.369999999999999;s:7:"boolean";b:1;s:6:"string";s:8:"a string";s:5:"array";a:2:{i:0;s:11:"first value";s:10:"second key";s:12:"second value";}}'],
@@ -168,8 +168,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     {
         $o = new Object('any object');
 
-        $p = new NonexistentObjectPropertyStub();
-        $o[$p->getName()] = $p;
+        $o->addProperty(new NonexistentObjectPropertyStub());
 
         $s = new Serializer();
         $s->serialize($o);
