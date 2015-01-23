@@ -2,6 +2,8 @@
 namespace jvdh\Serialization;
 
 use Exception;
+use jvdh\Serialization\Exception\InvalidKeyException;
+use jvdh\Serialization\Exception\UnsupportedSerializedVariableTypeException;
 use RuntimeException;
 
 class Unserializer implements UnserializerInterface
@@ -69,11 +71,9 @@ class Unserializer implements UnserializerInterface
 //            case 'r':
             case SerializedType::TYPE_REFERENCE:
                 return $this->parseReference();
-
-            default:
-                // TODO: Create proper exception
-                throw new Exception(sprintf('Type [%s] is an unsupported type', $valueType));
         }
+
+        throw new UnsupportedSerializedVariableTypeException($valueType);
     }
 
     /**
@@ -182,7 +182,6 @@ class Unserializer implements UnserializerInterface
         $this->references[] = &$result;
 
         for ($i=0; $i<$propertyLength; $i++) {
-            // TODO: validate key (for example it could be a double
             $key = $this->parse();
             array_pop($this->references);
             $value = $this->parse();
@@ -206,7 +205,7 @@ class Unserializer implements UnserializerInterface
     {
         $propertyType = $this->getPropertyTypeByKey($key);
 
-        $key = $this->getValidKeyByRaw($key);
+        $key = $this->getValidKeyByRawKey($key);
 
         return new SerializableObjectProperty($propertyType, $key, $value);
     }
@@ -217,7 +216,7 @@ class Unserializer implements UnserializerInterface
     private function ensureKeyIsValid($key)
     {
         if (!is_string($key) && !is_int($key)) {
-            throw new RuntimeException('Key is invalid');
+            throw new InvalidKeyException();
         }
     }
 
@@ -256,7 +255,7 @@ class Unserializer implements UnserializerInterface
      * @param string $key
      * @return string
      */
-    private function getValidKeyByRaw($key)
+    private function getValidKeyByRawKey($key)
     {
         $p = strrpos($key, "\0");
         if ($p !== false) {

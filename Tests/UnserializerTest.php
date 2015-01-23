@@ -15,27 +15,11 @@ use stdClass;
 
 class UnserializerTest extends \PHPUnit_Framework_TestCase
 {
-//    public function testByteString()
-//    {
-//        $this->markTestSkipped();
-//        $byteString = '\\000';
-//        $hexString = pack('C', 0);
-//        var_dump(strlen($byteString), $byteString);
-//        var_dump(strlen($hexString), $hexString);
-//
-//        $hexString .= 'abc';
-//        var_dump(strlen($hexString), $hexString);
-//
-//        $hexString2 = pack('C', [0, '*', 0]);
-//        $hexString2 = pack('C', 0, '*', 0);
-//        var_dump(strlen($hexString2), $hexString2);
-//        exit;
-//    }
-
     /**
      * @dataProvider getSerializedSimpleData
      *
      * @param string $serializedData
+     * @param string $expectedData
      */
     public function testUnserialize_withSimpleData($serializedData, $expectedData)
     {
@@ -101,11 +85,6 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
         $unserializer = new Unserializer();
         $unserializedData = $unserializer->unserialize($serializedData);
 
-//        var_dump($expectedData, $unserializedData);
-//        var_dump($serializedData);
-//        exit;
-//        $data = unserialize($serializedData);
-//        var_dump($data);
         $this->assertEquals($expectedData, $unserializedData);
     }
 
@@ -195,7 +174,7 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Exception
+     * @expectedException \jvdh\Serialization\Exception\UnsupportedSerializedVariableTypeException
      */
     public function testUnserialize_withUnknowntypeThrowsException()
     {
@@ -230,7 +209,7 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
+     * @expectedException \jvdh\Serialization\Exception\InvalidKeyException
      *
      * @dataProvider getInvalidKeyData
      *
