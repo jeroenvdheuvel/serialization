@@ -6,7 +6,7 @@ use Iterator;
 use jvdh\Serialization\Exception\PropertyNameAlreadyClaimedException;
 use jvdh\Serialization\Exception\PropertyNameDoesNotExistException;
 
-class Object implements Countable, Iterator // TODO: Check if countable is needed when iterator is implemented
+class Object implements Countable, Iterator
 {
     /**
      * @var string
@@ -40,22 +40,52 @@ class Object implements Countable, Iterator // TODO: Check if countable is neede
      */
     public function addProperty(ObjectProperty $property)
     {
-        if (array_key_exists($property->getName(), $this->data)) {
+        if ($this->doesPropertyWithNameExists($property->getName())) {
             throw new PropertyNameAlreadyClaimedException($property->getName());
         }
 
-        // TODO: Check if object is locked
         $this->data[$property->getName()] = $property;
     }
 
-
+    /**
+     * @param mixed $name
+     * @return mixed
+     */
     public function getPropertyValueByName($name)
     {
-        if (!array_key_exists($name, $this->data)) {
+        return $this->getPropertyByName($name)->getValue();
+    }
+
+    /**
+     * @param mixed $name
+     * @param mixed $value
+     */
+    public function setPropertyValueByName($name, $value)
+    {
+        $this->getPropertyByName($name)->setValue($value);
+    }
+
+    /**
+     * @param mixed $name
+     * @return ObjectProperty
+     * @throws PropertyNameDoesNotExistException
+     */
+    protected function getPropertyByName($name)
+    {
+        if (!$this->doesPropertyWithNameExists($name)) {
             throw new PropertyNameDoesNotExistException($name);
         }
 
-        return $this->data[$name]->getValue();
+        return $this->data[$name];
+    }
+
+    /**
+     * @param mixed $name
+     * @return bool
+     */
+    protected function doesPropertyWithNameExists($name)
+    {
+        return array_key_exists($name, $this->data);
     }
 
     /**
@@ -107,8 +137,3 @@ class Object implements Countable, Iterator // TODO: Check if countable is neede
         reset($this->data);
     }
 }
-
-
-// TODO: Make it possible to lock the object
-// TODO: Make it possible to get the property value
-// TODO: Make it possible to set the property value

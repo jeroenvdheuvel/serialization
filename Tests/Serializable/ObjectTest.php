@@ -1,7 +1,7 @@
 <?php
 namespace jvdh\Serialization\Tests\Serializable;
 
-use jvdh\Serialization\Serializable\Object;
+use jvdh\Serialization\Serializable\Object as SerializableObject;
 use jvdh\Serialization\Serializable\ObjectProperty;
 use jvdh\Serialization\Serializable\PrivateObjectProperty;
 use jvdh\Serialization\Serializable\ProtectedObjectProperty;
@@ -12,7 +12,7 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
     public function testGetClassName()
     {
         $className = 'class name';
-        $o = new Object($className);
+        $o = new SerializableObject($className);
         $this->assertSame($className, $o->getClassName());
     }
 
@@ -98,14 +98,35 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
         $this->getObject()->getPropertyValueByName('nonexistent property');
     }
 
+    public function testSetPropertyValue_thatExistsSetsValue()
+    {
+        $o = $this->getObject();
+        $propertyName = 'p';
+        $oldValue = 'old value';
+        $newValue = ['an', 'array', 'of', 'values', 123];
+
+        $p = new PrivateObjectProperty($propertyName, $oldValue);
+
+        $o->addProperty($p);
+
+        $o->setPropertyValueByName($p->getName(), $newValue);
+
+        $this->assertSame($newValue, $o->getPropertyValueByName($p->getName()));
+    }
+
     /**
-     * @return Object
+     * @expectedException \jvdh\Serialization\Exception\PropertyNameDoesNotExistException
+     */
+    public function testSetPropertyValue_thatDoesNotExistsThrowsException()
+    {
+        $this->getObject()->setPropertyValueByName('nonexistent property', null);
+    }
+
+    /**
+     * @return SerializableObject
      */
     private function getObject()
     {
-        return new Object('class name');
+        return new SerializableObject('class name');
     }
 }
-
-// TODO: Set property value
-// TODO: Get property value
