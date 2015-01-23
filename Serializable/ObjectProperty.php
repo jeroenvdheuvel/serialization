@@ -3,7 +3,14 @@ namespace jvdh\Serialization\Serializable;
 
 abstract class ObjectProperty
 {
+    /**
+     * @var string
+     */
     private $name;
+
+    /**
+     * @var mixed
+     */
     private $value;
 
     /**
@@ -22,7 +29,7 @@ abstract class ObjectProperty
     abstract public function getType();
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getName()
     {

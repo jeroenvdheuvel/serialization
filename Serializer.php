@@ -2,6 +2,7 @@
 namespace jvdh\Serialization;
 
 use jvdh\Serialization\Exception\UnsupportedDataTypeException;
+use jvdh\Serialization\Exception\UnsupportedPropertyTypeException;
 use jvdh\Serialization\Serializable\Object;
 use jvdh\Serialization\Serializable\ObjectProperty;
 use jvdh\Serialization\Serializable\PrivateObjectProperty;
@@ -64,6 +65,6 @@ class Serializer implements SerializerInterface
                 return "\0" . $className . "\0" . $property->getName();
         }
 
-        throw new \Exception('Unsupported property type');
+        throw new UnsupportedPropertyTypeException($property->getType());
     }
 }

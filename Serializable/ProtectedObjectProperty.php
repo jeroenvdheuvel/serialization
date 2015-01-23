@@ -6,7 +6,7 @@ class ProtectedObjectProperty extends ObjectProperty
     const TYPE = 1;
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getType()
     {

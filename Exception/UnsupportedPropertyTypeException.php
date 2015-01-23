@@ -8,7 +8,7 @@ class UnsupportedPropertyTypeException extends SerializationException
      */
     public function __construct($type)
     {
-        $message = sprintf('Property type [%s] is unsupported');
+        $message = sprintf('Property type [%s] is unsupported', $type);
         parent::__construct($message);
     }
 }

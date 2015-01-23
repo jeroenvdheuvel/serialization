@@ -6,6 +6,7 @@ use jvdh\Serialization\Serializable\PrivateObjectProperty;
 use jvdh\Serialization\Serializable\ProtectedObjectProperty;
 use jvdh\Serialization\Serializable\PublicObjectProperty;
 use jvdh\Serialization\Serializer;
+use jvdh\Serialization\Tests\Serializable\NonexistentObjectPropertyStub;
 use stdClass;
 
 class SerializerTest extends \PHPUnit_Framework_TestCase
@@ -158,5 +159,19 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
             [fopen(__FILE__, 'r')],
             [new stdClass()],
         ];
+    }
+
+    /**
+     * @expectedException \jvdh\Serialization\Exception\UnsupportedPropertyTypeException
+     */
+    public function testSerialize_withUnsupportedObjectPropertyThrowsException()
+    {
+        $o = new Object('any object');
+
+        $p = new NonexistentObjectPropertyStub();
+        $o[$p->getName()] = $p;
+
+        $s = new Serializer();
+        $s->serialize($o);
     }
 }

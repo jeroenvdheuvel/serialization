@@ -6,7 +6,7 @@ class PrivateObjectProperty extends ObjectProperty
     const TYPE = 0;
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getType()
     {

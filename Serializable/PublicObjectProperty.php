@@ -6,7 +6,7 @@ class PublicObjectProperty extends ObjectProperty
     const TYPE = 2;
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getType()
     {
