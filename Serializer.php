@@ -3,7 +3,7 @@ namespace jvdh\Serialization;
 
 use jvdh\Serialization\Exception\UnsupportedDataTypeException;
 use jvdh\Serialization\Serializable\Object;
-use jvdh\Serialization\Serializable\SerializableObjectProperty;
+use jvdh\Serialization\Serializable\ObjectProperty;
 
 class Serializer implements SerializerInterface
 {
@@ -48,7 +48,7 @@ class Serializer implements SerializerInterface
         throw new UnsupportedDataTypeException();
     }
 
-    private function getSerializedObjectPropertyName(SerializableObjectProperty $property, $className)
+    private function getSerializedObjectPropertyName(ObjectProperty $property, $className)
     {
         switch ($property->getType()) {
             case SerializableObjectPropertyType::TYPE_PUBLIC:

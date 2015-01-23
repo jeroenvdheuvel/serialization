@@ -5,7 +5,7 @@ use DateTime;
 use DateTimeZone;
 use Exception;
 use jvdh\Serialization\Serializable\Object;
-use jvdh\Serialization\Serializable\SerializableObjectProperty;
+use jvdh\Serialization\Serializable\ObjectProperty;
 use jvdh\Serialization\SerializableObjectPropertyType;
 use jvdh\Serialization\TestClassThatCanBeSerializedStub;
 use jvdh\Serialization\Unserializer;
@@ -150,7 +150,7 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
         $name = $property->getName();
         $value = $this->getPropertyValueByPropertyAndObject($property, $object);
 
-        return new SerializableObjectProperty($type, $name, $value);
+        return new ObjectProperty($type, $name, $value);
     }
 
     private function getPropertyTypeByProperty(ReflectionProperty $property)

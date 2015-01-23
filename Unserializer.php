@@ -5,7 +5,7 @@ use Exception;
 use jvdh\Serialization\Exception\InvalidKeyException;
 use jvdh\Serialization\Exception\UnsupportedSerializedVariableTypeException;
 use jvdh\Serialization\Serializable\Object;
-use jvdh\Serialization\Serializable\SerializableObjectProperty;
+use jvdh\Serialization\Serializable\ObjectProperty;
 
 class Unserializer implements UnserializerInterface
 {
@@ -200,7 +200,7 @@ class Unserializer implements UnserializerInterface
     /**
      * @param string $key
      * @param mixed $value
-     * @return SerializableObjectProperty
+     * @return ObjectProperty
      */
     private function getSerializableObjectPropertyByRawKeyAndValue($key, $value)
     {
@@ -208,7 +208,7 @@ class Unserializer implements UnserializerInterface
 
         $key = $this->getValidKeyByRawKey($key);
 
-        return new SerializableObjectProperty($propertyType, $key, $value);
+        return new ObjectProperty($propertyType, $key, $value);
     }
 
     /**

@@ -1,7 +1,7 @@
 <?php
 namespace jvdh\Serialization\Serializable;
 
-class SerializableObjectProperty
+class ObjectProperty
 {
     private $type;
     private $name;

@@ -2,7 +2,7 @@
 namespace jvdh\Serialization\Tests;
 
 use jvdh\Serialization\Serializable\Object;
-use jvdh\Serialization\Serializable\SerializableObjectProperty;
+use jvdh\Serialization\Serializable\ObjectProperty;
 use jvdh\Serialization\SerializableObjectPropertyType;
 use jvdh\Serialization\Serializer;
 use stdClass;
@@ -117,11 +117,11 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $serializedObject4['integer'] = 5;
 
         $serializedObject5 = new Object('jvdh\Serialization\Tests\SerializableStubWithPublicAndProtectedAndPrivateProperties');
-        $serializedObject5['privatePropertyOne'] = new SerializableObjectProperty(SerializableObjectPropertyType::TYPE_PRIVATE, 'privatePropertyOne', 0.1);
-        $serializedObject5['protectedPropertyOne'] = new SerializableObjectProperty(SerializableObjectPropertyType::TYPE_PROTECTED, 'protectedPropertyOne', 'one');
-        $serializedObject5['protectedPropertyTwo'] = new SerializableObjectProperty(SerializableObjectPropertyType::TYPE_PROTECTED, 'protectedPropertyTwo', null);
-        $serializedObject5['publicPropertyOne'] = new SerializableObjectProperty(SerializableObjectPropertyType::TYPE_PUBLIC, 'publicPropertyOne', true);
-        $serializedObject5['publicPropertyTwo'] = new SerializableObjectProperty(SerializableObjectPropertyType::TYPE_PUBLIC, 'publicPropertyTwo', 12);
+        $serializedObject5['privatePropertyOne'] = new ObjectProperty(SerializableObjectPropertyType::TYPE_PRIVATE, 'privatePropertyOne', 0.1);
+        $serializedObject5['protectedPropertyOne'] = new ObjectProperty(SerializableObjectPropertyType::TYPE_PROTECTED, 'protectedPropertyOne', 'one');
+        $serializedObject5['protectedPropertyTwo'] = new ObjectProperty(SerializableObjectPropertyType::TYPE_PROTECTED, 'protectedPropertyTwo', null);
+        $serializedObject5['publicPropertyOne'] = new ObjectProperty(SerializableObjectPropertyType::TYPE_PUBLIC, 'publicPropertyOne', true);
+        $serializedObject5['publicPropertyTwo'] = new ObjectProperty(SerializableObjectPropertyType::TYPE_PUBLIC, 'publicPropertyTwo', 12);
 
         return [
             [new Object('stdClass'), 'O:8:"stdClass":0:{}'],
