@@ -174,3 +174,6 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $s->serialize($o);
     }
 }
+
+// TODO: Check if all flows are covered and can be simplfied
+// TODO: Make another Serializer that uses Serialize() method of php when possible (not for arrays or objects)

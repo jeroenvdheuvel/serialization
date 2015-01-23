@@ -263,6 +263,3 @@ class Unserializer implements UnserializerInterface
         return $key;
     }
 }
-
-
-// FACTS:

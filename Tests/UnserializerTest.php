@@ -250,4 +250,6 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
         return $value;
     }
 }
-// TODO: Use magic methods
+// TODO: Test if it's not possible to add more properties after serialization
+// TODO: Check if all flows are covered and can be simplfied
+// TODO: Make another Unserializer that uses unserialize() method of php when possible (not for arrays or objects)
