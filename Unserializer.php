@@ -5,6 +5,7 @@ use Exception;
 use jvdh\Serialization\Exception\InvalidKeyException;
 use jvdh\Serialization\Exception\UnsupportedSerializedVariableTypeException;
 use jvdh\Serialization\Serializable\Object;
+use jvdh\Serialization\Serializable\SerializableObjectProperty;
 
 class Unserializer implements UnserializerInterface
 {

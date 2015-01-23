@@ -1,5 +1,5 @@
 <?php
-namespace jvdh\Serialization;
+namespace jvdh\Serialization\Serializable;
 
 class SerializableObjectProperty
 {

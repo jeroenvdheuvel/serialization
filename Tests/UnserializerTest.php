@@ -5,7 +5,7 @@ use DateTime;
 use DateTimeZone;
 use Exception;
 use jvdh\Serialization\Serializable\Object;
-use jvdh\Serialization\SerializableObjectProperty;
+use jvdh\Serialization\Serializable\SerializableObjectProperty;
 use jvdh\Serialization\SerializableObjectPropertyType;
 use jvdh\Serialization\TestClassThatCanBeSerializedStub;
 use jvdh\Serialization\Unserializer;

@@ -2,7 +2,7 @@
 namespace jvdh\Serialization\Tests;
 
 use jvdh\Serialization\Serializable\Object;
-use jvdh\Serialization\SerializableObjectProperty;
+use jvdh\Serialization\Serializable\SerializableObjectProperty;
 use jvdh\Serialization\SerializableObjectPropertyType;
 use jvdh\Serialization\Serializer;
 use stdClass;

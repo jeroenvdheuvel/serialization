@@ -3,6 +3,7 @@ namespace jvdh\Serialization;
 
 use jvdh\Serialization\Exception\UnsupportedDataTypeException;
 use jvdh\Serialization\Serializable\Object;
+use jvdh\Serialization\Serializable\SerializableObjectProperty;
 
 class Serializer implements SerializerInterface
 {
