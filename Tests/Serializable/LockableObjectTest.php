@@ -2,6 +2,7 @@
 namespace jvdh\Serialization\Tests\Serializable;
 
 use jvdh\Serialization\Serializable\LockableObject;
+use jvdh\Serialization\Stub\Serializable\NonexistentObjectPropertyStub;
 
 class LockableObjectTest extends \PHPUnit_Framework_TestCase
 {

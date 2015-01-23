@@ -1,5 +1,5 @@
 <?php
-namespace jvdh\Serialization\Tests\Serializable;
+namespace jvdh\Serialization\Stub\Serializable;
 
 use jvdh\Serialization\Serializable\ObjectProperty;
 

@@ -6,7 +6,7 @@ use jvdh\Serialization\Serializable\PrivateObjectProperty;
 use jvdh\Serialization\Serializable\ProtectedObjectProperty;
 use jvdh\Serialization\Serializable\PublicObjectProperty;
 use jvdh\Serialization\Serializer;
-use jvdh\Serialization\Tests\Serializable\NonexistentObjectPropertyStub;
+use jvdh\Serialization\Stub\Serializable\NonexistentObjectPropertyStub;
 use stdClass;
 
 class SerializerTest extends \PHPUnit_Framework_TestCase

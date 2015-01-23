@@ -6,6 +6,7 @@ use jvdh\Serialization\Serializable\ObjectProperty;
 use jvdh\Serialization\Serializable\PrivateObjectProperty;
 use jvdh\Serialization\Serializable\ProtectedObjectProperty;
 use jvdh\Serialization\Serializable\PublicObjectProperty;
+use jvdh\Serialization\Stub\Serializable\NonexistentObjectPropertyStub;
 
 class ObjectTest extends \PHPUnit_Framework_TestCase
 {
