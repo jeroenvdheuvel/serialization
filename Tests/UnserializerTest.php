@@ -4,6 +4,7 @@ namespace jvdh\Serialization\Tests;
 use DateTime;
 use DateTimeZone;
 use Exception;
+use jvdh\Serialization\Serializable\LockableObject;
 use jvdh\Serialization\Serializable\Object;
 use jvdh\Serialization\Serializable\PrivateObjectProperty;
 use jvdh\Serialization\Serializable\ProtectedObjectProperty;
@@ -126,19 +127,29 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
+    /**
+     * @param mixed $object
+     * @return LockableObject
+     */
     private function convertObjectToSerializableObject($object)
     {
         $reflectionObject = new ReflectionObject($object);
 
-        $serializableObject = new Object($reflectionObject->getName());
+        $serializableObject = new LockableObject($reflectionObject->getName());
 
         foreach ($reflectionObject->getProperties() as $property) {
             $serializableObject->addProperty($this->getSerializableObjectPropertyByProperty($property, $object));
         }
+        $serializableObject->lock();
 
         return $serializableObject;
     }
 
+    /**
+     * @param ReflectionProperty $property
+     * @param mixed $object
+     * @return PrivateObjectProperty|ProtectedObjectProperty|PublicObjectProperty
+     */
     private function getSerializableObjectPropertyByProperty(ReflectionProperty $property, $object)
     {
         $property->setAccessible(true);

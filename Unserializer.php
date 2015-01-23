@@ -4,6 +4,7 @@ namespace jvdh\Serialization;
 use Exception;
 use jvdh\Serialization\Exception\InvalidKeyException;
 use jvdh\Serialization\Exception\UnsupportedSerializedVariableTypeException;
+use jvdh\Serialization\Serializable\LockableObject;
 use jvdh\Serialization\Serializable\Object;
 use jvdh\Serialization\Serializable\ObjectProperty;
 use jvdh\Serialization\Serializable\PrivateObjectProperty;
@@ -182,7 +183,7 @@ class Unserializer implements UnserializerInterface
         $this->position += $classNameLength + 2;
         $propertyLength = $this->readLength();
 
-        $result = new Object($className);
+        $result = new LockableObject($className);
         $this->references[] = &$result;
 
         for ($i=0; $i<$propertyLength; $i++) {
@@ -194,6 +195,8 @@ class Unserializer implements UnserializerInterface
 
             $result->addProperty($p);
         }
+
+        $result->lock();
 
         $this->position += 1;
 

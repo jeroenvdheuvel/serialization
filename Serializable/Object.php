@@ -96,3 +96,8 @@ class Object implements Countable, Iterator // TODO: Check if countable is neede
         reset($this->data);
     }
 }
+
+
+// TODO: Make it possible to lock the object
+// TODO: Make it possible to get the property value
+// TODO: Make it possible to set the property value

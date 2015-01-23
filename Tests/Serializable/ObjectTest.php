@@ -78,7 +78,5 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
     }
 }
 
-// TODO: Make object lockable
-// Make it possible to iterate
 // TODO: Set property value
 // TODO: Get property value
