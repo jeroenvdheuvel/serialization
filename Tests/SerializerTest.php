@@ -2,12 +2,12 @@
 namespace jvdh\Serialization\Tests;
 
 use jvdh\Serialization\Serializable\Object;
-use jvdh\Serialization\Serializable\PrivateObjectProperty;
-use jvdh\Serialization\Serializable\ProtectedObjectProperty;
-use jvdh\Serialization\Serializable\PublicObjectProperty;
-use jvdh\Serialization\NonNativeSerializer;
 use jvdh\Serialization\SerializerInterface;
+use jvdh\Serialization\Stub\Serializable\ArrayLockableObjectStub;
+use jvdh\Serialization\Stub\Serializable\EmptyLockableObjectStub;
+use jvdh\Serialization\Stub\Serializable\LockableObjectContainingAnotherLockableObjectStub;
 use jvdh\Serialization\Stub\Serializable\NonexistentObjectPropertyStub;
+use jvdh\Serialization\Stub\Serializable\SimpleLockableObjectStub;
 use stdClass;
 
 abstract class SerializerTest extends \PHPUnit_Framework_TestCase
@@ -96,30 +96,21 @@ abstract class SerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expectedData, $serializedData);
     }
 
+    /**
+     * @return array
+     */
     public function getSerializedObjectData()
     {
-        // TODO: Create stubs
-        // TODO: - Empty
-        // TODO: - With simple data
-        // TODO: - With simple data and arrays
-        // TODO: - With simple data and arrays and another serializable object
-        // TODO: Test Serialize with unexisting class
-
-        $serializedObject5 = new Object('jvdh\Serialization\Tests\SerializableStubWithPublicAndProtectedAndPrivateProperties');
-        $serializedObject5->addProperty(new PrivateObjectProperty('privatePropertyOne', 0.1));
-        $serializedObject5->addProperty(new ProtectedObjectProperty('protectedPropertyOne', 'one'));
-        $serializedObject5->addProperty(new ProtectedObjectProperty('protectedPropertyTwo', null));
-        $serializedObject5->addProperty(new PublicObjectProperty('publicPropertyOne', true));
-        $serializedObject5->addProperty(new PublicObjectProperty('publicPropertyTwo', 12));
-
         return [
-            [$serializedObject5, "O:83:\"jvdh\\Serialization\\Tests\\SerializableStubWithPublicAndProtectedAndPrivateProperties\":5:{s:103:\"\000jvdh\\Serialization\\Tests\\SerializableStubWithPublicAndProtectedAndPrivateProperties\000privatePropertyOne\";d:0.10000000000000001;s:23:\"\000*\000protectedPropertyOne\";s:3:\"one\";s:23:\"\000*\000protectedPropertyTwo\";N;s:17:\"publicPropertyOne\";b:1;s:17:\"publicPropertyTwo\";i:12;}"],
+            [new EmptyLockableObjectStub(), 'O:23:"EmptyLockableObjectStub":0:{}'],
+            [new SimpleLockableObjectStub(), "O:24:\"SimpleLockableObjectStub\":5:{s:21:\"first public property\";N;s:22:\"second public property\";b:0;s:27:\"\0*\0first protected property\";i:-2;s:28:\"\0*\0second protected property\";d:-5.1234000000000002;s:48:\"\0SimpleLockableObjectStub\0first private property\";s:11:\"lorem ipsum\";}"],
+            [new ArrayLockableObjectStub(), "O:23:\"ArrayLockableObjectStub\":3:{s:16:\"publicEmptyArray\";a:0:{}s:27:\"\0*\0protectedArrayWithValues\";a:3:{i:0;i:1;i:1;s:1:\"2\";i:2;b:0;}s:54:\"\0ArrayLockableObjectStub\0privateArrayWithKeysAndValues\";a:3:{s:3:\"key\";s:5:\"value\";s:5:\"false\";b:0;s:4:\"null\";N;}}"],
+            [new LockableObjectContainingAnotherLockableObjectStub(), "O:49:\"LockableObjectContainingAnotherLockableObjectStub\":2:{s:62:\"\0LockableObjectContainingAnotherLockableObjectStub\0emptyObject\";O:23:\"EmptyLockableObjectStub\":0:{}s:15:\"\0*\0simpleObject\";O:24:\"SimpleLockableObjectStub\":5:{s:21:\"first public property\";N;s:22:\"second public property\";b:0;s:27:\"\0*\0first protected property\";i:-2;s:28:\"\0*\0second protected property\";d:-5.1234000000000002;s:48:\"\0SimpleLockableObjectStub\0first private property\";s:11:\"lorem ipsum\";}}"],
         ];
     }
 
     /**
      * @dataProvider getSerializedUnsupportedData
-     *
      * @expectedException \jvdh\Serialization\Exception\UnsupportedDataTypeException
      *
      * @param mixed $unserializedData
@@ -157,7 +148,5 @@ abstract class SerializerTest extends \PHPUnit_Framework_TestCase
      */
     abstract protected function getSerializer();
 }
-
 // TODO: Check if all flows are covered and can be simplfied
-// TODO: Make another Serializer that uses Serialize() method of php when possible (not for arrays or objects)
 // TODO: Add more tests concerning references
