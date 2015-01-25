@@ -10,7 +10,7 @@ class ArrayLockableObjectStub extends LockableObject
 {
     public function __construct()
     {
-        parent::__construct('ArrayLockableObjectStub');
+        parent::__construct('jvdh\Serialization\Stub\Serializable\ArrayStub');
 
         $this->addProperty(new PublicObjectProperty('publicEmptyArray', []));
         $this->addProperty(new ProtectedObjectProperty('protectedArrayWithValues', [1, '2', false]));

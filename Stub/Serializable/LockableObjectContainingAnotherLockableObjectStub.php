@@ -9,7 +9,7 @@ class LockableObjectContainingAnotherLockableObjectStub extends LockableObject
 {
     public function __construct()
     {
-        parent::__construct('LockableObjectContainingAnotherLockableObjectStub');
+        parent::__construct('jvdh\Serialization\Stub\Serializable\ObjectContainingAnotherObject');
 
         $this->addProperty(new PrivateObjectProperty('emptyObject', new EmptyLockableObjectStub()));
         $this->addProperty(new ProtectedObjectProperty('simpleObject', new SimpleLockableObjectStub()));

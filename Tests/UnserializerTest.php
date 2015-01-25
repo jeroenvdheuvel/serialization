@@ -5,10 +5,20 @@ use DateTime;
 use DateTimeZone;
 use Exception;
 use jvdh\Serialization\Serializable\LockableObject;
+use jvdh\Serialization\Serializable\Object as SerializableObject;
+use jvdh\Serialization\Serializable\ObjectProperty;
 use jvdh\Serialization\Serializable\PrivateObjectProperty;
 use jvdh\Serialization\Serializable\ProtectedObjectProperty;
 use jvdh\Serialization\Serializable\PublicObjectProperty;
 use jvdh\Serialization\Stub\ObjectWithPublicAndProtectedAndPrivatePropertiesStub;
+use jvdh\Serialization\Stub\Serializable\ArrayLockableObjectStub;
+use jvdh\Serialization\Stub\Serializable\ArrayStub;
+use jvdh\Serialization\Stub\Serializable\EmptyLockableObjectStub;
+use jvdh\Serialization\Stub\Serializable\EmptyStub;
+use jvdh\Serialization\Stub\Serializable\LockableObjectContainingAnotherLockableObjectStub;
+use jvdh\Serialization\Stub\Serializable\ObjectContainingAnotherObject;
+use jvdh\Serialization\Stub\Serializable\SimpleLockableObjectStub;
+use jvdh\Serialization\Stub\Serializable\SimpleStub;
 use jvdh\Serialization\Unserializer;
 use ReflectionObject;
 use ReflectionProperty;
@@ -86,7 +96,66 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
         $unserializer = new Unserializer();
         $unserializedData = $unserializer->unserialize($serializedData);
 
-        $this->assertEquals($expectedData, $unserializedData);
+        $this->assertEqualsLockableObject($expectedData, $unserializedData);
+    }
+
+    /**
+     * @param LockableObject|ObjectProperty[] $expected
+     * @param LockableObject|ObjectProperty[] $given
+     */
+    private function assertEqualsLockableObject(LockableObject $expected, LockableObject $given)
+    {
+        $this->assertSame($expected->getClassName(), $given->getClassName());
+        $this->assertSame($expected->isLocked(), $given->isLocked());
+        $this->assertSame($expected->count(), $given->count());
+
+        $this->assertObjectProperties($expected, $given);
+    }
+
+    /**
+     * @param SerializableObject $expected
+     * @param SerializableObject $given
+     */
+    private function assertObjectProperties(SerializableObject $expected, SerializableObject $given)
+    {
+        $expectedProperties = $this->getPropertiesOfLockableObject($expected);
+        $givenProperties = $this->getPropertiesOfLockableObject($given);
+
+        foreach ($expectedProperties as $key => $expectedProperty) {
+            $this->assertTrue(array_key_exists($key, $givenProperties));
+            $this->assertEqualsObjectProperty($expectedProperty, $givenProperties[$key]);
+        }
+    }
+
+    /**
+     * @param ObjectProperty $expected
+     * @param ObjectProperty $given
+     */
+    private function assertEqualsObjectProperty(ObjectProperty $expected, ObjectProperty $given)
+    {
+        $this->assertSame($expected->getName(), $given->getName());
+        $this->assertSame($expected->getType(), $given->getType());
+
+        if ($expected->getValue() instanceof SerializableObject) {
+            $this->assertEqualsLockableObject($expected->getValue(), $given->getValue());
+        } else {
+            $this->assertSame($expected->getValue(), $given->getValue());
+        }
+    }
+
+    /**
+     * @param LockableObject|ObjectProperty[] $object
+     * @return array|ObjectProperty[]
+     */
+    private function getPropertiesOfLockableObject(LockableObject $object)
+    {
+        $properties = [];
+
+        foreach ($object as $key => $property) {
+            $properties[$key] = $property;
+        }
+
+        return $properties;
     }
 
     /**
@@ -94,40 +163,13 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
      */
     public function getSerializedObjectData()
     {
-        // TODO: Instead of using serialization, use a pair of stubs: Stubs and LockableStubs that belong together
-
-        $classWithFourProperties = new stdClass();
-        $classWithFourProperties->firstProperty = 'first property';
-        $classWithFourProperties->secondProperty = 123;
-        $classWithFourProperties->thirdProperty = 45.6;
-        $classWithFourProperties->fourthProperty = false;
-
-        $classWithArrayAsProperty = new stdClass();
-        $classWithArrayAsProperty->arrayProperty = ['array property'];
-
-        $classWithAssociativeArrayAsProperty = new stdClass();
-        $classWithAssociativeArrayAsProperty->arrayProperty = ['first key' => 'first value', 'second key' => 'second value'];
-
-        $classWithClassAsProperty = new stdClass();
-        $classWithClassAsProperty->classProperty = new stdClass();
-        $classWithClassAsProperty->classProperty->anIntegerValue = 1234567890;
-
-        $dateTime = new DateTime('2014-01-01 13:37:00', new DateTimeZone('Europe/Amsterdam'));
-
-        // TODO: Use stubs
-
         return [
-//            [serialize($emptyClass), $this->convertObjectToSerializableObject($emptyClass)],
-//            [serialize($classWithFourProperties), $this->convertObjectToSerializableObject($classWithFourProperties)],
-//            [serialize($classWithArrayAsProperty), $this->convertObjectToSerializableObject($classWithArrayAsProperty)],
-//            [serialize($classWithArrayAsProperty), $this->convertObjectToSerializableObject($classWithArrayAsProperty)],
-//            [serialize($classWithAssociativeArrayAsProperty), $this->convertObjectToSerializableObject($classWithAssociativeArrayAsProperty)],
-//            [serialize($classWithClassAsProperty), $this->convertObjectToSerializableObject($classWithClassAsProperty)],
-//            [serialize($dateTime), $this->convertObjectToSerializableObject($dateTime)],
-//            [serialize($classIsSerialized), $this->convertObjectToSerializableObject($classIsSerialized)],
-//            [serialize(new SerializableStubWithPublicProperties()), $this->convertObjectToSerializableObject(new SerializableStubWithPublicProperties())],
-//            [serialize(new SerializableStubWithPublicAndProtectedProperties()), $this->convertObjectToSerializableObject(new SerializableStubWithPublicAndProtectedProperties())],
-//            [serialize(new StubObjectWithPublicAndProtectedAndPrivateProperties()), $this->convertObjectToSerializableObject(new StubObjectWithPublicAndProtectedAndPrivateProperties())],
+            [serialize(new EmptyStub()), new EmptyLockableObjectStub()],
+            [serialize(new SimpleStub()), new SimpleLockableObjectStub()],
+            [serialize(new ArrayStub()), new ArrayLockableObjectStub()],
+            [serialize(new ObjectContainingAnotherObject()), new LockableObjectContainingAnotherLockableObjectStub()],
+
+            // TODO: Throw away
             $this->getSerializedDataWithExpectedUnserializedObject(new ObjectWithPublicAndProtectedAndPrivatePropertiesStub()),
         ];
     }

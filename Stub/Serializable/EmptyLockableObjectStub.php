@@ -7,7 +7,7 @@ class EmptyLockableObjectStub extends LockableObject
 {
     public function __construct()
     {
-        parent::__construct('EmptyLockableObjectStub');
+        parent::__construct('jvdh\Serialization\Stub\Serializable\EmptyStub');
 
         $this->lock();
     }
