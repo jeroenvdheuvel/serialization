@@ -1,7 +1,7 @@
 <?php
 namespace jvdh\Serialization\Stub;
 
-class StubObjectWithPublicAndProtectedProperties extends StubObjectWithPublicProperties
+class ObjectWithPublicAndProtectedPropertiesStub extends ObjectWithPublicPropertiesStub
 {
     protected $protectedPropertyOne = 'one';
     protected $protectedPropertyTwo = null;

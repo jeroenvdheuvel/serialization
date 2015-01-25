@@ -1,7 +1,7 @@
 <?php
 namespace jvdh\Serialization\Stub;
 
-class StubObjectWithPublicProperties
+class ObjectWithPublicPropertiesStub
 {
     public $publicPropertyOne = true;
     public $publicPropertyTwo = 12;

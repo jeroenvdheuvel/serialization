@@ -8,7 +8,7 @@ use jvdh\Serialization\Serializable\LockableObject;
 use jvdh\Serialization\Serializable\PrivateObjectProperty;
 use jvdh\Serialization\Serializable\ProtectedObjectProperty;
 use jvdh\Serialization\Serializable\PublicObjectProperty;
-use jvdh\Serialization\Stub\StubObjectWithPublicAndProtectedAndPrivateProperties;
+use jvdh\Serialization\Stub\ObjectWithPublicAndProtectedAndPrivatePropertiesStub;
 use jvdh\Serialization\Unserializer;
 use ReflectionObject;
 use ReflectionProperty;
@@ -126,7 +126,7 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
 //            [serialize(new SerializableStubWithPublicProperties()), $this->convertObjectToSerializableObject(new SerializableStubWithPublicProperties())],
 //            [serialize(new SerializableStubWithPublicAndProtectedProperties()), $this->convertObjectToSerializableObject(new SerializableStubWithPublicAndProtectedProperties())],
 //            [serialize(new StubObjectWithPublicAndProtectedAndPrivateProperties()), $this->convertObjectToSerializableObject(new StubObjectWithPublicAndProtectedAndPrivateProperties())],
-            $this->getSerializedDataWithExpectedUnserializedObject(new StubObjectWithPublicAndProtectedAndPrivateProperties()),
+            $this->getSerializedDataWithExpectedUnserializedObject(new ObjectWithPublicAndProtectedAndPrivatePropertiesStub()),
         ];
     }
 
