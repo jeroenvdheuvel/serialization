@@ -25,6 +25,9 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expectedData, $serializedData);
     }
 
+    /**
+     * @return array
+     */
     public function getUnserializedSimpleData()
     {
         return [
@@ -77,6 +80,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
             $this->getUnserializedDataWithExpectedSerializedDataAsArray([2,3]),
             $this->getUnserializedDataWithExpectedSerializedDataAsArray([2 => 4]),
             $this->getUnserializedDataWithExpectedSerializedDataAsArray(['a' => 'b', 'c' => true, 1, 2.23, null]),
+            $this->getUnserializedDataWithExpectedSerializedDataAsArray(['b' => [2, 5]]),
         ];
     }
 
@@ -96,25 +100,12 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
 
     public function getSerializedObjectData()
     {
-//        $t = new stdClass();
-//        $t->firstProperty = 'firstValue';
-//        $serializedObject2 = new Object('stdClass');
-//        $serializedObject2['firstProperty'] = 'firstValue';
-//
-//        $serializedObject3 = new Object('stdClass');
-//        $serializedObject3['null'] = null;
-//        $serializedObject3['integer'] = 2;
-//        $serializedObject3['negativeInteger'] = -1337;
-//        $serializedObject3['float'] = 13.37;
-//        $serializedObject3['boolean'] = true;
-//        $serializedObject3['string'] = 'a string';
-//        $serializedObject3['array'] = ['first value', 'second key' => 'second value'];
-//
-//
-//        $serializedObject4 = new Object('stdClass');
-//        $serializedObject4['boolean'] = true;
-//        $serializedObject4['anotherObject'] = $serializedObject2;
-//        $serializedObject4['integer'] = 5;
+        // TODO: Create stubs
+        // TODO: - Empty
+        // TODO: - With simple data
+        // TODO: - With simple data and arrays
+        // TODO: - With simple data and arrays and another serializable object
+        // TODO: Test Serialize with unexisting class
 
         $serializedObject5 = new Object('jvdh\Serialization\Tests\SerializableStubWithPublicAndProtectedAndPrivateProperties');
         $serializedObject5->addProperty(new PrivateObjectProperty('privatePropertyOne', 0.1));
@@ -124,15 +115,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $serializedObject5->addProperty(new PublicObjectProperty('publicPropertyTwo', 12));
 
         return [
-//            [new Object('stdClass'), 'O:8:"stdClass":0:{}'],
-
-//            [$serializedObject2, 'O:8:"stdClass":1:{s:13:"firstProperty";s:10:"firstValue";}'],
-//            [$serializedObject3, 'O:8:"stdClass":7:{s:4:"null";N;s:7:"integer";i:2;s:15:"negativeInteger";i:-1337;s:5:"float";d:13.369999999999999;s:7:"boolean";b:1;s:6:"string";s:8:"a string";s:5:"array";a:2:{i:0;s:11:"first value";s:10:"second key";s:12:"second value";}}'],
-//            [$serializedObject4, 'O:8:"stdClass":3:{s:7:"boolean";b:1;s:13:"anotherObject";O:8:"stdClass":1:{s:13:"firstProperty";s:10:"firstValue";}s:7:"integer";i:5;}'],
             [$serializedObject5, "O:83:\"jvdh\\Serialization\\Tests\\SerializableStubWithPublicAndProtectedAndPrivateProperties\":5:{s:103:\"\000jvdh\\Serialization\\Tests\\SerializableStubWithPublicAndProtectedAndPrivateProperties\000privatePropertyOne\";d:0.10000000000000001;s:23:\"\000*\000protectedPropertyOne\";s:3:\"one\";s:23:\"\000*\000protectedPropertyTwo\";N;s:17:\"publicPropertyOne\";b:1;s:17:\"publicPropertyTwo\";i:12;}"],
-            // TODO: Serialize with private properties
-            // TODO: Seriaize with protected properties
-            // TODO: Serialize with public properties
         ];
     }
 
@@ -177,3 +160,4 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
 
 // TODO: Check if all flows are covered and can be simplfied
 // TODO: Make another Serializer that uses Serialize() method of php when possible (not for arrays or objects)
+// TODO: Add more tests concerning references

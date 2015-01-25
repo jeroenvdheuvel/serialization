@@ -81,7 +81,7 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
      * @param mixed $expectedData
      * @throws Exception
      */
-    public function testUnserialize_withObject($serializedData, $expectedData)
+    public function testUnserialize_withObject($serializedData, LockableObject $expectedData)
     {
         $unserializer = new Unserializer();
         $unserializedData = $unserializer->unserialize($serializedData);
@@ -112,6 +112,8 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
 
         $dateTime = new DateTime('2014-01-01 13:37:00', new DateTimeZone('Europe/Amsterdam'));
 
+        // TODO: Use stubs
+
         return [
 //            [serialize($emptyClass), $this->convertObjectToSerializableObject($emptyClass)],
 //            [serialize($classWithFourProperties), $this->convertObjectToSerializableObject($classWithFourProperties)],
@@ -123,8 +125,18 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
 //            [serialize($classIsSerialized), $this->convertObjectToSerializableObject($classIsSerialized)],
 //            [serialize(new SerializableStubWithPublicProperties()), $this->convertObjectToSerializableObject(new SerializableStubWithPublicProperties())],
 //            [serialize(new SerializableStubWithPublicAndProtectedProperties()), $this->convertObjectToSerializableObject(new SerializableStubWithPublicAndProtectedProperties())],
-            [serialize(new StubObjectWithPublicAndProtectedAndPrivateProperties()), $this->convertObjectToSerializableObject(new StubObjectWithPublicAndProtectedAndPrivateProperties())],
+//            [serialize(new StubObjectWithPublicAndProtectedAndPrivateProperties()), $this->convertObjectToSerializableObject(new StubObjectWithPublicAndProtectedAndPrivateProperties())],
+            $this->getSerializedDataWithExpectedUnserializedObject(new StubObjectWithPublicAndProtectedAndPrivateProperties()),
         ];
+    }
+
+    /**
+     * @param mixed $object
+     * @return array
+     */
+    private function getSerializedDataWithExpectedUnserializedObject($object)
+    {
+        return [serialize($object), $this->convertObjectToSerializableObject($object)];
     }
 
     /**
@@ -250,6 +262,8 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
         return $value;
     }
 }
-// TODO: Test if it's not possible to add more properties after serialization
+
 // TODO: Check if all flows are covered and can be simplfied
 // TODO: Make another Unserializer that uses unserialize() method of php when possible (not for arrays or objects)
+// TODO: Unserialize unexisting class (primary goal of this unserializer)
+// TODO: Add more tests concerning references
