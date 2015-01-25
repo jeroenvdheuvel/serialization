@@ -3,7 +3,7 @@ namespace jvdh\Serialization;
 
 use jvdh\Serialization\Exception\UnsupportedDataTypeException;
 use jvdh\Serialization\Exception\UnsupportedPropertyTypeException;
-use jvdh\Serialization\Serializable\Object;
+use jvdh\Serialization\Serializable\Object as SerializableObject;
 use jvdh\Serialization\Serializable\ObjectProperty;
 use jvdh\Serialization\Serializable\PrivateObjectProperty;
 use jvdh\Serialization\Serializable\ProtectedObjectProperty;
@@ -28,7 +28,7 @@ class Serializer implements SerializerInterface
             return sprintf('%s:%d:"%s";', SerializedType::TYPE_STRING, strlen($data), $data);
         } elseif (is_array($data)) {
             return $this->serializeArray($data);
-        } elseif (is_object($data) && $data instanceof Object) {
+        } elseif (is_object($data) && $data instanceof SerializableObject) {
             return $this->serializeObject($data);
         }
 
@@ -51,13 +51,12 @@ class Serializer implements SerializerInterface
     }
 
     /**
-     * @param Object|ObjectProperty[] $data
+     * @param SerializableObject|ObjectProperty[] $data
      * @return string
      */
-    private function serializeObject(Object $data)
+    private function serializeObject(SerializableObject $data)
     {
-        $serializedString = '';
-        $serializedString .= 'O:' . strlen($data->getClassName()) . ':"' . $data->getClassName() . '":' . count($data) . ':{';
+        $serializedString = 'O:' . strlen($data->getClassName()) . ':"' . $data->getClassName() . '":' . count($data) . ':{';
 
         foreach ($data as $propertyValue) {
             $name = $this->serialize($this->getSerializedObjectPropertyName($propertyValue, $data->getClassName()));

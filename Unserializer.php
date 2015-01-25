@@ -1,7 +1,6 @@
 <?php
 namespace jvdh\Serialization;
 
-use Exception;
 use jvdh\Serialization\Exception\InvalidKeyException;
 use jvdh\Serialization\Exception\UnsupportedSerializedVariableTypeException;
 use jvdh\Serialization\Serializable\LockableObject;
@@ -40,8 +39,8 @@ class Unserializer implements UnserializerInterface
     }
 
     /**
-     * @return array|bool|float|int|null|string
-     * @throws Exception
+     * @return array|LockableObject|bool|float|int|string|null
+     * @throws UnsupportedSerializedVariableTypeException
      */
     private function parse()
     {
@@ -133,7 +132,6 @@ class Unserializer implements UnserializerInterface
 
     /**
      * @return array
-     * @throws Exception
      */
     private function parseArray()
     {
@@ -172,8 +170,7 @@ class Unserializer implements UnserializerInterface
     }
 
     /**
-     * @return array
-     * @throws Exception
+     * @return LockableObject
      */
     private function parseObject()
     {
