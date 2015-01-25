@@ -5,11 +5,12 @@ use jvdh\Serialization\Serializable\Object;
 use jvdh\Serialization\Serializable\PrivateObjectProperty;
 use jvdh\Serialization\Serializable\ProtectedObjectProperty;
 use jvdh\Serialization\Serializable\PublicObjectProperty;
-use jvdh\Serialization\Serializer;
+use jvdh\Serialization\NonNativeSerializer;
+use jvdh\Serialization\SerializerInterface;
 use jvdh\Serialization\Stub\Serializable\NonexistentObjectPropertyStub;
 use stdClass;
 
-class SerializerTest extends \PHPUnit_Framework_TestCase
+abstract class SerializerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider getUnserializedSimpleData
@@ -19,8 +20,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSerialize_withSimpleData($unserializedData, $expectedData)
     {
-        $serializer = new Serializer();
-        $serializedData = $serializer->serialize($unserializedData);
+        $serializedData = $this->getSerializer()->serialize($unserializedData);
 
         $this->assertSame($expectedData, $serializedData);
     }
@@ -63,8 +63,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSerialize_withArray($unserializedData, $expectedData)
     {
-        $serializer = new Serializer();
-        $serializedData = $serializer->serialize($unserializedData);
+        $serializedData = $this->getSerializer()->serialize($unserializedData);
 
         $this->assertEquals($expectedData, $serializedData);
     }
@@ -92,8 +91,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSerialize_withObject($unserializedData, $expectedData)
     {
-        $serializer = new Serializer();
-        $serializedData = $serializer->serialize($unserializedData);
+        $serializedData = $this->getSerializer()->serialize($unserializedData);
 
         $this->assertSame($expectedData, $serializedData);
     }
@@ -129,8 +127,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSerialize_withUnsupportedType($unserializedData)
     {
-        $serializer = new Serializer();
-        $serializer->serialize($unserializedData);
+        $this->getSerializer()->serialize($unserializedData);
     }
 
     /**
@@ -150,12 +147,15 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     public function testSerialize_withUnsupportedObjectPropertyThrowsException()
     {
         $o = new Object('any object');
-
         $o->addProperty(new NonexistentObjectPropertyStub());
 
-        $s = new Serializer();
-        $s->serialize($o);
+        $this->getSerializer()->serialize($o);
     }
+
+    /**
+     * @return SerializerInterface
+     */
+    abstract protected function getSerializer();
 }
 
 // TODO: Check if all flows are covered and can be simplfied
