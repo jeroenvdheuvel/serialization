@@ -22,7 +22,6 @@ use jvdh\Serialization\Stub\Serializable\SimpleStub;
 use jvdh\Serialization\Unserializer;
 use ReflectionObject;
 use ReflectionProperty;
-use stdClass;
 
 class UnserializerTest extends \PHPUnit_Framework_TestCase
 {
@@ -168,58 +167,7 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
             [serialize(new SimpleStub()), new SimpleLockableObjectStub()],
             [serialize(new ArrayStub()), new ArrayLockableObjectStub()],
             [serialize(new ObjectContainingAnotherObject()), new LockableObjectContainingAnotherLockableObjectStub()],
-
-            // TODO: Throw away
-            $this->getSerializedDataWithExpectedUnserializedObject(new ObjectWithPublicAndProtectedAndPrivatePropertiesStub()),
         ];
-    }
-
-    /**
-     * @param mixed $object
-     * @return array
-     */
-    private function getSerializedDataWithExpectedUnserializedObject($object)
-    {
-        return [serialize($object), $this->convertObjectToSerializableObject($object)];
-    }
-
-    /**
-     * @param mixed $object
-     * @return LockableObject
-     */
-    private function convertObjectToSerializableObject($object)
-    {
-        $reflectionObject = new ReflectionObject($object);
-
-        $serializableObject = new LockableObject($reflectionObject->getName());
-
-        foreach ($reflectionObject->getProperties() as $property) {
-            $serializableObject->addProperty($this->getSerializableObjectPropertyByProperty($property, $object));
-        }
-        $serializableObject->lock();
-
-        return $serializableObject;
-    }
-
-    /**
-     * @param ReflectionProperty $property
-     * @param mixed $object
-     * @return PrivateObjectProperty|ProtectedObjectProperty|PublicObjectProperty
-     */
-    private function getSerializableObjectPropertyByProperty(ReflectionProperty $property, $object)
-    {
-        $property->setAccessible(true);
-
-        $name = $property->getName();
-        $value = $this->getPropertyValueByPropertyAndObject($property, $object);
-
-        if ($property->isPublic()) {
-            return new PublicObjectProperty($name, $value);
-        } else if ($property->isProtected()) {
-            return new ProtectedObjectProperty($name, $value);
-        } else {
-            return new PrivateObjectProperty($name, $value);
-        }
     }
 
     /**
@@ -288,22 +236,6 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
             ['a:1:{d:0.0;s:5:"value";}'],
             ['O:8:"stdClass":1:{d:0.0;i:1;}'],
         ];
-    }
-
-    /**
-     * @param ReflectionProperty $property
-     * @param mixed $object
-     * @return Object|mixed
-     */
-    private function getPropertyValueByPropertyAndObject(ReflectionProperty $property, $object)
-    {
-        $value = $property->getValue($object);
-
-        if (is_object($value)) {
-            $value = $this->convertObjectToSerializableObject($value);
-        }
-
-        return $value;
     }
 }
 
