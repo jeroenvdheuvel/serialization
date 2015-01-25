@@ -94,6 +94,8 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
      */
     public function getSerializedObjectData()
     {
+        // TODO: Instead of using serialization, use a pair of stubs: Stubs and LockableStubs that belong together
+
         $classWithFourProperties = new stdClass();
         $classWithFourProperties->firstProperty = 'first property';
         $classWithFourProperties->secondProperty = 123;
