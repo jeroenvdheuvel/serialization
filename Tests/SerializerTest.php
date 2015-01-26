@@ -4,11 +4,15 @@ namespace jvdh\Serialization\Tests;
 use jvdh\Serialization\Serializable\Object;
 use jvdh\Serialization\SerializerInterface;
 use jvdh\Serialization\Stub\Serializable\ArrayLockableObjectStub;
+use jvdh\Serialization\Stub\Serializable\ArrayStub;
 use jvdh\Serialization\Stub\Serializable\EmptyLockableObjectStub;
 use jvdh\Serialization\Stub\Serializable\EmptyStub;
+use jvdh\Serialization\Stub\Serializable\ObjectContainingAnotherObject;
 use jvdh\Serialization\Stub\Serializable\ObjectContainingAnotherObjectLockableObjectStub;
 use jvdh\Serialization\Stub\Serializable\NonexistentObjectPropertyStub;
+use jvdh\Serialization\Stub\Serializable\ObjectContainingObjectReferencesStub;
 use jvdh\Serialization\Stub\Serializable\SimpleLockableObjectStub;
+use jvdh\Serialization\Stub\Serializable\SimpleStub;
 use stdClass;
 
 abstract class SerializerTest extends \PHPUnit_Framework_TestCase
@@ -102,13 +106,11 @@ abstract class SerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function getSerializedObjectData()
     {
-        // TODO: Instead of using the string, it's also possible to serialize the object
         return [
             [new EmptyLockableObjectStub(), serialize(new EmptyStub())],
-            [new EmptyLockableObjectStub(), $this->getSerializedStub('EmptySerializedStub')],
-            [new SimpleLockableObjectStub(), $this->getSerializedStub('SimpleSerializedStub')],
-            [new ArrayLockableObjectStub(), $this->getSerializedStub('ArraySerializedStub')],
-            [new ObjectContainingAnotherObjectLockableObjectStub(), $this->getSerializedStub('ObjectContainingSimpleReferencesSerializedStub')],
+            [new SimpleLockableObjectStub(), serialize(new SimpleStub())],
+            [new ArrayLockableObjectStub(), serialize(new ArrayStub())],
+            [new ObjectContainingAnotherObjectLockableObjectStub(), serialize(new ObjectContainingAnotherObject())],
         ];
     }
 
