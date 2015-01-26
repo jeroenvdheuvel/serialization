@@ -71,7 +71,6 @@ class Unserializer implements UnserializerInterface
             case SerializedType::TYPE_OBJECT:
                 return $this->parseObject();
 
-//            case 'r':
             case SerializedType::TYPE_REFERENCE:
                 return $this->parseReference();
         }
