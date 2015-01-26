@@ -9,7 +9,7 @@ use jvdh\Serialization\Stub\Serializable\ArrayLockableObjectStub;
 use jvdh\Serialization\Stub\Serializable\ArrayStub;
 use jvdh\Serialization\Stub\Serializable\EmptyLockableObjectStub;
 use jvdh\Serialization\Stub\Serializable\EmptyStub;
-use jvdh\Serialization\Stub\Serializable\LockableObjectContainingAnotherLockableObjectStub;
+use jvdh\Serialization\Stub\Serializable\ObjectContainingAnotherObjectLockableObjectStub;
 use jvdh\Serialization\Stub\Serializable\ObjectContainingAnotherObject;
 use jvdh\Serialization\Stub\Serializable\ObjectContainingObjectReferencesLockableObjectStub;
 use jvdh\Serialization\Stub\Serializable\ObjectContainingObjectReferencesStub;
@@ -162,7 +162,7 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
             [serialize(new EmptyStub()), new EmptyLockableObjectStub()],
             [serialize(new SimpleStub()), new SimpleLockableObjectStub()],
             [serialize(new ArrayStub()), new ArrayLockableObjectStub()],
-            [serialize(new ObjectContainingAnotherObject()), new LockableObjectContainingAnotherLockableObjectStub()],
+            [serialize(new ObjectContainingAnotherObject()), new ObjectContainingAnotherObjectLockableObjectStub()],
             [serialize(new ObjectContainingSimpleReferencesStub()), new ObjectContainingSimpleReferencesLockableObjectStub()],
             [serialize(new ObjectContainingObjectReferencesStub()), new ObjectContainingObjectReferencesLockableObjectStub()],
         ];

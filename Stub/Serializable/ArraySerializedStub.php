@@ -1,0 +1,2 @@
+<?php
+return "O:46:\"jvdh\\Serialization\\Stub\\Serializable\\ArrayStub\":3:{s:16:\"publicEmptyArray\";a:0:{}s:27:\"\0*\0protectedArrayWithValues\";a:3:{i:0;i:1;i:1;s:1:\"2\";i:2;b:0;}s:77:\"\0jvdh\\Serialization\\Stub\\Serializable\\ArrayStub\0privateArrayWithKeysAndValues\";a:3:{s:3:\"key\";s:5:\"value\";s:5:\"false\";b:0;s:4:\"null\";N;}}";

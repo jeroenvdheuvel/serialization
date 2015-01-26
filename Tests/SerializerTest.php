@@ -5,7 +5,7 @@ use jvdh\Serialization\Serializable\Object;
 use jvdh\Serialization\SerializerInterface;
 use jvdh\Serialization\Stub\Serializable\ArrayLockableObjectStub;
 use jvdh\Serialization\Stub\Serializable\EmptyLockableObjectStub;
-use jvdh\Serialization\Stub\Serializable\LockableObjectContainingAnotherLockableObjectStub;
+use jvdh\Serialization\Stub\Serializable\ObjectContainingAnotherObjectLockableObjectStub;
 use jvdh\Serialization\Stub\Serializable\NonexistentObjectPropertyStub;
 use jvdh\Serialization\Stub\Serializable\SimpleLockableObjectStub;
 use stdClass;
@@ -102,10 +102,10 @@ abstract class SerializerTest extends \PHPUnit_Framework_TestCase
     public function getSerializedObjectData()
     {
         return [
-            [new EmptyLockableObjectStub(), 'O:46:"jvdh\Serialization\Stub\Serializable\EmptyStub":0:{}'],
-            [new SimpleLockableObjectStub(), "O:47:\"jvdh\\Serialization\\Stub\\Serializable\\SimpleStub\":5:{s:19:\"firstPublicProperty\";N;s:20:\"secondPublicProperty\";b:0;s:25:\"\0*\0firstProtectedProperty\";i:-2;s:26:\"\0*\0secondProtectedProperty\";d:-5.1234000000000002;s:69:\"\0jvdh\\Serialization\\Stub\\Serializable\\SimpleStub\0firstPrivateProperty\";s:11:\"lorem ipsum\";}"],
-            [new ArrayLockableObjectStub(), "O:46:\"jvdh\\Serialization\\Stub\\Serializable\\ArrayStub\":3:{s:16:\"publicEmptyArray\";a:0:{}s:27:\"\0*\0protectedArrayWithValues\";a:3:{i:0;i:1;i:1;s:1:\"2\";i:2;b:0;}s:77:\"\0jvdh\\Serialization\\Stub\\Serializable\\ArrayStub\0privateArrayWithKeysAndValues\";a:3:{s:3:\"key\";s:5:\"value\";s:5:\"false\";b:0;s:4:\"null\";N;}}"],
-            [new LockableObjectContainingAnotherLockableObjectStub(), "O:66:\"jvdh\\Serialization\\Stub\\Serializable\\ObjectContainingAnotherObject\":2:{s:79:\"\0jvdh\\Serialization\\Stub\\Serializable\\ObjectContainingAnotherObject\0emptyObject\";O:46:\"jvdh\Serialization\Stub\Serializable\EmptyStub\":0:{}s:15:\"\0*\0simpleObject\";O:47:\"jvdh\\Serialization\\Stub\\Serializable\\SimpleStub\":5:{s:19:\"firstPublicProperty\";N;s:20:\"secondPublicProperty\";b:0;s:25:\"\0*\0firstProtectedProperty\";i:-2;s:26:\"\0*\0secondProtectedProperty\";d:-5.1234000000000002;s:69:\"\0jvdh\\Serialization\\Stub\\Serializable\\SimpleStub\0firstPrivateProperty\";s:11:\"lorem ipsum\";}}"],
+            [new EmptyLockableObjectStub(), $this->getSerializedStub('EmptySerializedStub')],
+            [new SimpleLockableObjectStub(), $this->getSerializedStub('SimpleSerializedStub')],
+            [new ArrayLockableObjectStub(), $this->getSerializedStub('ArraySerializedStub')],
+            [new ObjectContainingAnotherObjectLockableObjectStub(), "O:66:\"jvdh\\Serialization\\Stub\\Serializable\\ObjectContainingAnotherObject\":2:{s:79:\"\0jvdh\\Serialization\\Stub\\Serializable\\ObjectContainingAnotherObject\0emptyObject\";O:46:\"jvdh\Serialization\Stub\Serializable\EmptyStub\":0:{}s:15:\"\0*\0simpleObject\";O:47:\"jvdh\\Serialization\\Stub\\Serializable\\SimpleStub\":5:{s:19:\"firstPublicProperty\";N;s:20:\"secondPublicProperty\";b:0;s:25:\"\0*\0firstProtectedProperty\";i:-2;s:26:\"\0*\0secondProtectedProperty\";d:-5.1234000000000002;s:69:\"\0jvdh\\Serialization\\Stub\\Serializable\\SimpleStub\0firstPrivateProperty\";s:11:\"lorem ipsum\";}}"],
         ];
     }
 
@@ -147,6 +147,14 @@ abstract class SerializerTest extends \PHPUnit_Framework_TestCase
      * @return SerializerInterface
      */
     abstract protected function getSerializer();
+
+    /**
+     * @return string
+     */
+    protected function getSerializedStub($name)
+    {
+        return include sprintf('%s/../Stub/Serializable/%s.php', __DIR__, $name);
+    }
 }
 // TODO: Check if all flows are covered and can be simplfied
 // TODO: Add more tests concerning references

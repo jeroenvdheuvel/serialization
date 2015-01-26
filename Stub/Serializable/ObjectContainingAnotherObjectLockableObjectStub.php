@@ -5,7 +5,7 @@ use jvdh\Serialization\Serializable\LockableObject;
 use jvdh\Serialization\Serializable\PrivateObjectProperty;
 use jvdh\Serialization\Serializable\ProtectedObjectProperty;
 
-class LockableObjectContainingAnotherLockableObjectStub extends LockableObject
+class ObjectContainingAnotherObjectLockableObjectStub extends LockableObject
 {
     public function __construct()
     {
