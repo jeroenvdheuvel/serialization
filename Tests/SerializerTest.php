@@ -10,7 +10,6 @@ use jvdh\Serialization\Stub\Serializable\EmptyStub;
 use jvdh\Serialization\Stub\Serializable\ObjectContainingAnotherObject;
 use jvdh\Serialization\Stub\Serializable\ObjectContainingAnotherObjectLockableObjectStub;
 use jvdh\Serialization\Stub\Serializable\NonexistentObjectPropertyStub;
-use jvdh\Serialization\Stub\Serializable\ObjectContainingObjectReferencesStub;
 use jvdh\Serialization\Stub\Serializable\SimpleLockableObjectStub;
 use jvdh\Serialization\Stub\Serializable\SimpleStub;
 use stdClass;
@@ -152,14 +151,4 @@ abstract class SerializerTest extends \PHPUnit_Framework_TestCase
      * @return SerializerInterface
      */
     abstract protected function getSerializer();
-
-    /**
-     * @return string
-     */
-    protected function getSerializedStub($name)
-    {
-        return include sprintf('%s/../Stub/Serializable/%s.php', __DIR__, $name);
-    }
 }
-// TODO: Check if all flows are covered and can be simplfied
-// TODO: Add more tests concerning references

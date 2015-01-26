@@ -1,7 +1,6 @@
 <?php
 namespace jvdh\Serialization\Tests;
 
-use Exception;
 use jvdh\Serialization\Serializable\LockableObject;
 use jvdh\Serialization\Serializable\Object as SerializableObject;
 use jvdh\Serialization\Serializable\ObjectProperty;
@@ -55,7 +54,6 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
      *
      * @param mixed$serializedData
      * @param string $expectedData
-     * @throws \Exception
      */
     public function testUnserialize_withArray($serializedData, $expectedData)
     {
@@ -84,7 +82,6 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
      *
      * @param string $serializedData
      * @param mixed $expectedData
-     * @throws Exception
      */
     public function testUnserialize_withObject($serializedData, LockableObject $expectedData)
     {
@@ -190,7 +187,6 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
      * @dataProvider getSerializedDataWithReference
      *
      * @param string $serializedData
-     * @throws Exception
      */
     public function testUnserialize_withReference($serializedData, $expectedData)
     {
