@@ -1,27 +1,22 @@
 <?php
 namespace jvdh\Serialization\Tests;
 
-use DateTime;
-use DateTimeZone;
 use Exception;
 use jvdh\Serialization\Serializable\LockableObject;
 use jvdh\Serialization\Serializable\Object as SerializableObject;
 use jvdh\Serialization\Serializable\ObjectProperty;
-use jvdh\Serialization\Serializable\PrivateObjectProperty;
-use jvdh\Serialization\Serializable\ProtectedObjectProperty;
-use jvdh\Serialization\Serializable\PublicObjectProperty;
-use jvdh\Serialization\Stub\ObjectWithPublicAndProtectedAndPrivatePropertiesStub;
 use jvdh\Serialization\Stub\Serializable\ArrayLockableObjectStub;
 use jvdh\Serialization\Stub\Serializable\ArrayStub;
 use jvdh\Serialization\Stub\Serializable\EmptyLockableObjectStub;
 use jvdh\Serialization\Stub\Serializable\EmptyStub;
 use jvdh\Serialization\Stub\Serializable\LockableObjectContainingAnotherLockableObjectStub;
 use jvdh\Serialization\Stub\Serializable\ObjectContainingAnotherObject;
+use jvdh\Serialization\Stub\Serializable\ObjectContainingObjectReferencesStub;
+use jvdh\Serialization\Stub\Serializable\ObjectContainingSimpleReferencesLockableObjectStub;
+use jvdh\Serialization\Stub\Serializable\ObjectContainingSimpleReferencesStub;
 use jvdh\Serialization\Stub\Serializable\SimpleLockableObjectStub;
 use jvdh\Serialization\Stub\Serializable\SimpleStub;
 use jvdh\Serialization\Unserializer;
-use ReflectionObject;
-use ReflectionProperty;
 
 class UnserializerTest extends \PHPUnit_Framework_TestCase
 {
@@ -167,6 +162,8 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
             [serialize(new SimpleStub()), new SimpleLockableObjectStub()],
             [serialize(new ArrayStub()), new ArrayLockableObjectStub()],
             [serialize(new ObjectContainingAnotherObject()), new LockableObjectContainingAnotherLockableObjectStub()],
+            [serialize(new ObjectContainingSimpleReferencesStub()), new ObjectContainingSimpleReferencesLockableObjectStub()],
+            [serialize(new ObjectContainingObjectReferencesStub()), new ObjectContainingSimpleReferencesLockableObjectStub()],
         ];
     }
 
