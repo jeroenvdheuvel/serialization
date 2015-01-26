@@ -10,7 +10,7 @@ class ObjectContainingObjectReferencesStub
     public function __construct()
     {
         $this->firstValue = new EmptyStub();
-        $this->secondValue = new SimpleLockableObjectStub();
+        $this->secondValue = new SimpleStub();
         $this->thirdValue = &$this->firstValue;
     }
 }
