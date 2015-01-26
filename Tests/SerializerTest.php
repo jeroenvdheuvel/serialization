@@ -5,6 +5,7 @@ use jvdh\Serialization\Serializable\Object;
 use jvdh\Serialization\SerializerInterface;
 use jvdh\Serialization\Stub\Serializable\ArrayLockableObjectStub;
 use jvdh\Serialization\Stub\Serializable\EmptyLockableObjectStub;
+use jvdh\Serialization\Stub\Serializable\EmptyStub;
 use jvdh\Serialization\Stub\Serializable\ObjectContainingAnotherObjectLockableObjectStub;
 use jvdh\Serialization\Stub\Serializable\NonexistentObjectPropertyStub;
 use jvdh\Serialization\Stub\Serializable\SimpleLockableObjectStub;
@@ -101,11 +102,13 @@ abstract class SerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function getSerializedObjectData()
     {
+        // TODO: Instead of using the string, it's also possible to serialize the object
         return [
+            [new EmptyLockableObjectStub(), serialize(new EmptyStub())],
             [new EmptyLockableObjectStub(), $this->getSerializedStub('EmptySerializedStub')],
             [new SimpleLockableObjectStub(), $this->getSerializedStub('SimpleSerializedStub')],
             [new ArrayLockableObjectStub(), $this->getSerializedStub('ArraySerializedStub')],
-            [new ObjectContainingAnotherObjectLockableObjectStub(), "O:66:\"jvdh\\Serialization\\Stub\\Serializable\\ObjectContainingAnotherObject\":2:{s:79:\"\0jvdh\\Serialization\\Stub\\Serializable\\ObjectContainingAnotherObject\0emptyObject\";O:46:\"jvdh\Serialization\Stub\Serializable\EmptyStub\":0:{}s:15:\"\0*\0simpleObject\";O:47:\"jvdh\\Serialization\\Stub\\Serializable\\SimpleStub\":5:{s:19:\"firstPublicProperty\";N;s:20:\"secondPublicProperty\";b:0;s:25:\"\0*\0firstProtectedProperty\";i:-2;s:26:\"\0*\0secondProtectedProperty\";d:-5.1234000000000002;s:69:\"\0jvdh\\Serialization\\Stub\\Serializable\\SimpleStub\0firstPrivateProperty\";s:11:\"lorem ipsum\";}}"],
+            [new ObjectContainingAnotherObjectLockableObjectStub(), $this->getSerializedStub('ObjectContainingSimpleReferencesSerializedStub')],
         ];
     }
 
