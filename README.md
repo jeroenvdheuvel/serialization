@@ -8,7 +8,7 @@ library is not creating the actual objects that were serialized. Therefore no er
 class could not be found. This can come in handy when using multiple applications share data via php serialization.
 
 
-Master: [![Build Status](https://secure.travis-ci.org/jeroenvdheuvel/serialization.png?branch=master)](https://travis-ci.org/jeroenvdheuvel/serialization)
+[![Build Status](https://travis-ci.org/jeroenvdheuvel/serialization.svg)](https://travis-ci.org/jeroenvdheuvel/serialization)
 
 
 Known issues
