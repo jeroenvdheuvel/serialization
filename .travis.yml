@@ -8,4 +8,7 @@ php:
   - hhvm
   - hhvm-nightly
 
-script: phpunit --coverage-text
+before_script:
+  - composer update --prefer-dist --dev -o
+
+script: ./vendor/bin/phpunit --coverage-text
