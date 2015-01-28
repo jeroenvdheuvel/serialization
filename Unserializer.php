@@ -33,7 +33,7 @@ class Unserializer implements UnserializerInterface
     {
         $this->position = 0;
         $this->serializedData = $data;
-        $this->references = [];
+        $this->references = array();
 
         return $this->parse();
     }
@@ -136,7 +136,7 @@ class Unserializer implements UnserializerInterface
     {
         $int = $this->readLength();
 
-        $result = [];
+        $result = array();
         $this->references[] = &$result;
 
         for ($i=0;$i<$int;$i++) {

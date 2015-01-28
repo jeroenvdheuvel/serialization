@@ -64,11 +64,11 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
      */
     public function getAddPropertyData()
     {
-        return [
-            [[new PrivateObjectProperty('p1', 1)]],
-            [[new PrivateObjectProperty('p1', 1), new ProtectedObjectProperty('p2', '2')]],
-            [[new PrivateObjectProperty('p1', 1), new ProtectedObjectProperty('p2', '2'), new PublicObjectProperty('p3', [3])]],
-        ];
+        return array(
+            array(array(new PrivateObjectProperty('p1', 1))),
+            array(array(new PrivateObjectProperty('p1', 1), new ProtectedObjectProperty('p2', '2'))),
+            array(array(new PrivateObjectProperty('p1', 1), new ProtectedObjectProperty('p2', '2'), new PublicObjectProperty('p3', array(3)))),
+        );
     }
 
     /**
@@ -104,7 +104,7 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
         $o = $this->getObject();
         $propertyName = 'p';
         $oldValue = 'old value';
-        $newValue = ['an', 'array', 'of', 'values', 123];
+        $newValue = array('an', 'array', 'of', 'values', 123);
 
         $p = new PrivateObjectProperty($propertyName, $oldValue);
 

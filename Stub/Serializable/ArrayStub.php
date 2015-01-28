@@ -3,7 +3,7 @@ namespace jvdh\Serialization\Stub\Serializable;
 
 class ArrayStub
 {
-    public $publicEmptyArray = [];
-    protected $protectedArrayWithValues = [1, '2', false];
-    private $privateArrayWithKeysAndValues = ['key' => 'value', 'false' => false, 'null' => null];
+    public $publicEmptyArray = array();
+    protected $protectedArrayWithValues = array(1, '2', false);
+    private $privateArrayWithKeysAndValues = array('key' => 'value', 'false' => false, 'null' => null);
 }

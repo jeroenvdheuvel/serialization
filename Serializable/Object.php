@@ -24,7 +24,7 @@ class Object implements Countable, Iterator
     public function __construct($className)
     {
         $this->className = $className;
-        $this->data = [];
+        $this->data = array();
     }
 
     /**

@@ -39,14 +39,14 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
      */
     public function getSerializedSimpleData()
     {
-        return [
+        return array(
             $this->getSerializedDataWithExpectedUnserializedDataAsArray(true),
             $this->getSerializedDataWithExpectedUnserializedDataAsArray(null),
             $this->getSerializedDataWithExpectedUnserializedDataAsArray('true'),
             $this->getSerializedDataWithExpectedUnserializedDataAsArray('0123456789'),
             $this->getSerializedDataWithExpectedUnserializedDataAsArray(123),
             $this->getSerializedDataWithExpectedUnserializedDataAsArray(1.23),
-        ];
+        );
     }
 
     /**
@@ -65,16 +65,16 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
 
     public function getSerializedArrayData()
     {
-        return [
-            $this->getSerializedDataWithExpectedUnserializedDataAsArray([]),
-            $this->getSerializedDataWithExpectedUnserializedDataAsArray(['0123456789', 1]),
-            $this->getSerializedDataWithExpectedUnserializedDataAsArray([2, 4, 1234]),
-            $this->getSerializedDataWithExpectedUnserializedDataAsArray([123, 456]),
-            $this->getSerializedDataWithExpectedUnserializedDataAsArray([123, 456, '789']),
-            $this->getSerializedDataWithExpectedUnserializedDataAsArray(['abc' => 123]),
-            $this->getSerializedDataWithExpectedUnserializedDataAsArray(['abc' => 'qwe']),
-            $this->getSerializedDataWithExpectedUnserializedDataAsArray(['abc' => 'qwe', 4 => 123, 5 => 'aab']),
-        ];
+        return array(
+            $this->getSerializedDataWithExpectedUnserializedDataAsArray(array()),
+            $this->getSerializedDataWithExpectedUnserializedDataAsArray(array('0123456789', 1)),
+            $this->getSerializedDataWithExpectedUnserializedDataAsArray(array(2, 4, 1234)),
+            $this->getSerializedDataWithExpectedUnserializedDataAsArray(array(123, 456)),
+            $this->getSerializedDataWithExpectedUnserializedDataAsArray(array(123, 456, '789')),
+            $this->getSerializedDataWithExpectedUnserializedDataAsArray(array('abc' => 123)),
+            $this->getSerializedDataWithExpectedUnserializedDataAsArray(array('abc' => 'qwe')),
+            $this->getSerializedDataWithExpectedUnserializedDataAsArray(array('abc' => 'qwe', 4 => 123, 5 => 'aab')),
+        );
     }
 
     /**
@@ -141,7 +141,7 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
      */
     private function getPropertiesOfLockableObject(LockableObject $object)
     {
-        $properties = [];
+        $properties = array();
 
         foreach ($object as $key => $property) {
             $properties[$key] = $property;
@@ -155,23 +155,23 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
      */
     public function getSerializedObjectData()
     {
-        return [
-            [serialize(new EmptyStub()), new EmptyLockableObjectStub()],
-            [serialize(new SimpleStub()), new SimpleLockableObjectStub()],
-            [serialize(new ArrayStub()), new ArrayLockableObjectStub()],
-            [serialize(new ObjectContainingAnotherObject()), new ObjectContainingAnotherObjectLockableObjectStub()],
-            [serialize(new ObjectContainingSimpleReferencesStub()), new ObjectContainingSimpleReferencesLockableObjectStub()],
-            [serialize(new ObjectContainingObjectReferencesStub()), new ObjectContainingObjectReferencesLockableObjectStub()],
-        ];
+        return array(
+            array(serialize(new EmptyStub()), new EmptyLockableObjectStub()),
+            array(serialize(new SimpleStub()), new SimpleLockableObjectStub()),
+            array(serialize(new ArrayStub()), new ArrayLockableObjectStub()),
+            array(serialize(new ObjectContainingAnotherObject()), new ObjectContainingAnotherObjectLockableObjectStub()),
+            array(serialize(new ObjectContainingSimpleReferencesStub()), new ObjectContainingSimpleReferencesLockableObjectStub()),
+            array(serialize(new ObjectContainingObjectReferencesStub()), new ObjectContainingObjectReferencesLockableObjectStub()),
+        );
     }
 
     /**
-     * @param mixed$data
+     * @param mixed $data
      * @return array
      */
     private function getSerializedDataWithExpectedUnserializedDataAsArray($data)
     {
-        return [serialize($data), $data];
+        return array(serialize($data), $data);
     }
 
     /**
@@ -197,15 +197,15 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
 
     public function getSerializedDataWithReference()
     {
-        $t2 = ['second array'];
-        $t3 = ['third array'];
-        $t1 = ['first array', &$t2, $t2, &$t2, &$t3, &$t3];
+        $t2 = array('second array');
+        $t3 = array('third array');
+        $t1 = array('first array', &$t2, $t2, &$t2, &$t3, &$t3);
 
         // TODO: use objects as well as references
 
-        return [
+        return array(
             $this->getSerializedDataWithExpectedUnserializedDataAsArray($t1),
-        ];
+        );
     }
 
     /**
@@ -226,10 +226,10 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
      */
     public function getInvalidKeyData()
     {
-        return [
-            ['a:1:{d:0.0;s:5:"value";}'],
-            ['O:8:"stdClass":1:{d:0.0;i:1;}'],
-        ];
+        return array(
+            array('a:1:{d:0.0;s:5:"value";}'),
+            array('O:8:"stdClass":1:{d:0.0;i:1;}'),
+        );
     }
 }
 

@@ -34,7 +34,7 @@ abstract class SerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function getUnserializedSimpleData()
     {
-        return [
+        return array(
             $this->getUnserializedDataWithExpectedSerializedDataAsArray(null),
             $this->getUnserializedDataWithExpectedSerializedDataAsArray(123),
             $this->getUnserializedDataWithExpectedSerializedDataAsArray(-456),
@@ -47,7 +47,7 @@ abstract class SerializerTest extends \PHPUnit_Framework_TestCase
             $this->getUnserializedDataWithExpectedSerializedDataAsArray('string'),
             $this->getUnserializedDataWithExpectedSerializedDataAsArray('true'),
             $this->getUnserializedDataWithExpectedSerializedDataAsArray('1234567890'),
-        ];
+        );
     }
 
     /**
@@ -56,7 +56,7 @@ abstract class SerializerTest extends \PHPUnit_Framework_TestCase
      */
     private function getUnserializedDataWithExpectedSerializedDataAsArray($data)
     {
-        return [$data, serialize($data)];
+        return array($data, serialize($data));
     }
 
     /**
@@ -77,14 +77,14 @@ abstract class SerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function getSerializedArrayData()
     {
-        return [
-            $this->getUnserializedDataWithExpectedSerializedDataAsArray([]),
-            $this->getUnserializedDataWithExpectedSerializedDataAsArray([1]),
-            $this->getUnserializedDataWithExpectedSerializedDataAsArray([2,3]),
-            $this->getUnserializedDataWithExpectedSerializedDataAsArray([2 => 4]),
-            $this->getUnserializedDataWithExpectedSerializedDataAsArray(['a' => 'b', 'c' => true, 1, 2.23, null]),
-            $this->getUnserializedDataWithExpectedSerializedDataAsArray(['b' => [2, 5]]),
-        ];
+        return array(
+            $this->getUnserializedDataWithExpectedSerializedDataAsArray(array()),
+            $this->getUnserializedDataWithExpectedSerializedDataAsArray(array(1)),
+            $this->getUnserializedDataWithExpectedSerializedDataAsArray(array(2,3)),
+            $this->getUnserializedDataWithExpectedSerializedDataAsArray(array(2 => 4)),
+            $this->getUnserializedDataWithExpectedSerializedDataAsArray(array('a' => 'b', 'c' => true, 1, 2.23, null)),
+            $this->getUnserializedDataWithExpectedSerializedDataAsArray(array('b' => array(2, 5))),
+        );
     }
 
     /**
@@ -105,12 +105,12 @@ abstract class SerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function getSerializedObjectData()
     {
-        return [
-            [new EmptyLockableObjectStub(), serialize(new EmptyStub())],
-            [new SimpleLockableObjectStub(), serialize(new SimpleStub())],
-            [new ArrayLockableObjectStub(), serialize(new ArrayStub())],
-            [new ObjectContainingAnotherObjectLockableObjectStub(), serialize(new ObjectContainingAnotherObject())],
-        ];
+        return array(
+            array(new EmptyLockableObjectStub(), serialize(new EmptyStub())),
+            array(new SimpleLockableObjectStub(), serialize(new SimpleStub())),
+            array(new ArrayLockableObjectStub(), serialize(new ArrayStub())),
+            array(new ObjectContainingAnotherObjectLockableObjectStub(), serialize(new ObjectContainingAnotherObject())),
+        );
     }
 
     /**
@@ -130,10 +130,10 @@ abstract class SerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function getSerializedUnsupportedData()
     {
-        return [
-            [fopen(__FILE__, 'r')],
-            [new stdClass()],
-        ];
+        return array(
+            array(fopen(__FILE__, 'r')),
+            array(new stdClass()),
+        );
     }
 
     /**
