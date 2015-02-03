@@ -231,9 +231,54 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
             array('O:8:"stdClass":1:{d:0.0;i:1;}'),
         );
     }
+
+    public function testArrayWithReferences()
+    {
+        $arrayWithReferences = array();
+        $arrayWithReferences['firstValue'] = 123;
+        $arrayWithReferences['firstValueAndNotReference'] = $arrayWithReferences['firstValue'];
+        $arrayWithReferences['firstValueAndReference'] = &$arrayWithReferences['firstValue'];
+        $arrayWithReferences['secondValue'] = 'abc';
+        $arrayWithReferences['thirdValue'] = false;
+        $arrayWithReferences['thirdValueAndReference'] = &$arrayWithReferences['thirdValue'];
+        $arrayWithReferences['fourthValue'] = ['firstValue' => &$arrayWithReferences['firstValue']];
+        $arrayWithReferences['fifthValue'] = [];
+        $arrayWithReferences['fifthValueAndReference'] = &$arrayWithReferences['fifthValue'];
+
+        $serializedArrayWithReferences = serialize($arrayWithReferences);
+
+        $unserializer = new Unserializer();
+        $data = $unserializer->unserialize($serializedArrayWithReferences);
+
+        // Change References values on both arrays
+        $arrayWithReferences['firstValue'] = $data['firstValue'] = 'abc';
+        $arrayWithReferences['thirdValue'] = $data['thirdValue'] = 1;
+        $arrayWithReferences['fifthValueAndReference'] = $data['fifthValueAndReference'] = false;
+
+        $this->assertSame($arrayWithReferences, $data);
+    }
+
+    public function testObjectAndReferenceAreSame()
+    {
+        $serializedData = serialize(new ObjectContainingSimpleReferencesStub());
+
+        $unserializer = new Unserializer();
+        $data = $unserializer->unserialize($serializedData);
+
+        $firstValue = 5;
+        $secondValue = 'a';
+        $data->setPropertyValueByName('publicFirstValue', $firstValue);
+        $data->setPropertyValueByName('publicSecondValue', $secondValue);
+
+        $this->assertSame($firstValue, $data->getPropertyValueByName('publicThirdValue'));
+        $this->assertSame($secondValue, $data->getPropertyValueByName('publicFifthValue'));
+    }
 }
 
 // TODO: Check if all flows are covered and can be simplfied
 // TODO: Make another Unserializer that uses unserialize() method of php when possible (not for arrays or objects)
 // TODO: Unserialize unexisting class (primary goal of this unserializer)
 // TODO: Add more tests concerning references
+
+// TODO: Make a test that checks if an unserialized references object is the same as the actual object: ===
+// TODO: Make sure references work with objects, but also objectA = objectB, one of the two should be of type "r" when serializing

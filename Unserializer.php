@@ -42,7 +42,7 @@ class Unserializer implements UnserializerInterface
      * @return array|LockableObject|bool|float|int|string|null
      * @throws UnsupportedSerializedVariableTypeException
      */
-    private function parse()
+    private function &parse()
     {
         $valueType = $this->serializedData[$this->position];
 
@@ -51,27 +51,40 @@ class Unserializer implements UnserializerInterface
 
         switch ($valueType) {
             case SerializedType::TYPE_BOOLEAN:
-                return $this->references[] = $this->parseBoolean();
+                $d = $this->parseBoolean();
+                $this->references[] = &$d;
+                return $d;
 
             case SerializedType::TYPE_NULL:
-                return $this->references[] = $this->parseNull();
+                $d = &$this->parseNull();
+                $this->references[] = &$d;
+                return $d;
 
             case SerializedType::TYPE_STRING:
-                return $this->references[] = $this->parseString();
+                $d = &$this->parseString();
+                $this->references[] = &$d;
+                return $d;
 
             case SerializedType::TYPE_INTEGER:
-                return $this->references[] = $this->parseInteger();
+                $this->references[] = $this->parseInteger();
+                return $this->references[count($this->references) - 1];
 
             case SerializedType::TYPE_DOUBLE:
-                return $this->references[] = $this->parseFloat();
+                $d = &$this->parseFloat();
+                $this->references[] = &$d;
+                return $d;
 
             case SerializedType::TYPE_ARRAY:
-                return $this->parseArray();
+                $d = &$this->parseArray();
+                return $d;
 
             case SerializedType::TYPE_OBJECT:
-                return $this->parseObject();
+                $d = &$this->parseObject();
+                return $d;
 
             case SerializedType::TYPE_REFERENCE:
+            case strtolower(SerializedType::TYPE_REFERENCE): // TODO: Same object but not referenced. When assigning a different they won't be sort of references anymore. This only works for objects (not even arrays).
+                $this->lastParsedValueWasReference = true;
                 return $this->parseReference();
         }
 
@@ -132,7 +145,7 @@ class Unserializer implements UnserializerInterface
     /**
      * @return array
      */
-    private function parseArray()
+    private function &parseArray()
     {
         $int = $this->readLength();
 
@@ -146,8 +159,8 @@ class Unserializer implements UnserializerInterface
 
             // Keys can't be a reference
             array_pop($this->references);
-            $value = $this->parse();
-            $result[$key] = $value;
+            $value = &$this->parse();
+            $result[$key] = &$value;
         }
 
         $this->position += 1;
@@ -184,7 +197,7 @@ class Unserializer implements UnserializerInterface
         for ($i=0; $i<$propertyLength; $i++) {
             $key = $this->parse();
             array_pop($this->references);
-            $value = $this->parse();
+            $value = &$this->parse();
 
             $p = $this->getSerializableObjectPropertyByRawKeyAndValue($key, $value);
 
@@ -203,7 +216,7 @@ class Unserializer implements UnserializerInterface
      * @param mixed $value
      * @return ObjectProperty
      */
-    private function getSerializableObjectPropertyByRawKeyAndValue($rawKey, $value)
+    private function getSerializableObjectPropertyByRawKeyAndValue($rawKey, &$value)
     {
         $key = $this->getValidKeyByRawKey($rawKey);
 
@@ -230,7 +243,7 @@ class Unserializer implements UnserializerInterface
     /**
      * @return mixed
      */
-    private function parseReference()
+    private function &parseReference()
     {
         // TODO: Really return references when
 

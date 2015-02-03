@@ -12,11 +12,12 @@ class ObjectContainingSimpleReferencesLockableObjectStub extends LockableObject
 
         $firstValue = 'lorem ipsum dolem';
         $secondValue = 2;
+        $fourthValue = 4.0;
 
         $this->addProperty(new PublicObjectProperty('publicFirstValue', $firstValue));
         $this->addProperty(new PublicObjectProperty('publicSecondValue', $secondValue));
         $this->addProperty(new PublicObjectProperty('publicThirdValue', $firstValue));
-        $this->addProperty(new PublicObjectProperty('publicFourthValue', 4.0));
+        $this->addProperty(new PublicObjectProperty('publicFourthValue', $fourthValue));
         $this->addProperty(new PublicObjectProperty('publicFifthValue', $secondValue));
 
         $this->lock();

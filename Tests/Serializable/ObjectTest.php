@@ -65,9 +65,9 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
     public function getAddPropertyData()
     {
         return array(
-            array(array(new PrivateObjectProperty('p1', 1))),
-            array(array(new PrivateObjectProperty('p1', 1), new ProtectedObjectProperty('p2', '2'))),
-            array(array(new PrivateObjectProperty('p1', 1), new ProtectedObjectProperty('p2', '2'), new PublicObjectProperty('p3', array(3)))),
+            array(array(new PrivateObjectProperty('p1', $i = 1))),
+            array(array(new PrivateObjectProperty('p1', $i = 1), new ProtectedObjectProperty('p2', $s = '2'))),
+            array(array(new PrivateObjectProperty('p1', $i = 1), new ProtectedObjectProperty('p2', $s = '2'), new PublicObjectProperty('p3', $a = array(3)))),
         );
     }
 
@@ -78,8 +78,8 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
     {
         $o = $this->getObject();
         $propertyName = 'p1';
-        $o->addProperty(new PrivateObjectProperty($propertyName, 1));
-        $o->addProperty(new ProtectedObjectProperty($propertyName, 2));
+        $o->addProperty(new PrivateObjectProperty($propertyName, $i = 1));
+        $o->addProperty(new ProtectedObjectProperty($propertyName, $i = 2));
     }
 
     public function testGetPropertyValue_thatExistsReturnsValue()

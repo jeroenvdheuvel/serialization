@@ -17,10 +17,10 @@ abstract class ObjectProperty
      * @param string $name
      * @param mixed $value
      */
-    public function __construct($name, $value)
+    public function __construct($name, &$value)
     {
         $this->name = $name;
-        $this->value = $value;
+        $this->value = &$value;
     }
 
     /**
