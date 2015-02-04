@@ -12,13 +12,19 @@ class SimpleLockableObjectStub extends LockableObject
     {
         parent::__construct('jvdh\Serialization\Stub\Serializable\SimpleStub');
 
-        $this->addProperty(new PublicObjectProperty('firstPublicProperty', $n = null));
-        $this->addProperty(new PublicObjectProperty('secondPublicProperty', $b = false));
+        $n = null;
+        $b = false;
+        $i = -2;
+        $f = -5.1234;
+        $s = 'lorem ipsum';
 
-        $this->addProperty(new ProtectedObjectProperty('firstProtectedProperty', $i = -2));
-        $this->addProperty(new ProtectedObjectProperty('secondProtectedProperty', $f = -5.1234));
+        $this->addProperty(new PublicObjectProperty('firstPublicProperty', $n));
+        $this->addProperty(new PublicObjectProperty('secondPublicProperty', $b));
 
-        $this->addProperty(new PrivateObjectProperty('firstPrivateProperty', $s = 'lorem ipsum'));
+        $this->addProperty(new ProtectedObjectProperty('firstProtectedProperty', $i));
+        $this->addProperty(new ProtectedObjectProperty('secondProtectedProperty', $f));
+
+        $this->addProperty(new PrivateObjectProperty('firstPrivateProperty', $s));
 
         $this->lock();
     }
