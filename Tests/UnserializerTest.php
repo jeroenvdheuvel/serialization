@@ -287,7 +287,7 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($data[0], $data[1]);
     }
 
-    public function testArrayWithObjectsAsCopesAreNotSameAfterChanging()
+    public function testArrayWithObjectsAsCopiesAreNotSameAfterChanging()
     {
         $emptyStub = new EmptyStub();
         $serializedData = serialize(array($emptyStub, $emptyStub));
