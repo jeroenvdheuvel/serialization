@@ -241,8 +241,8 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
         $arrayWithReferences['secondValue'] = 'abc';
         $arrayWithReferences['thirdValue'] = false;
         $arrayWithReferences['thirdValueAndReference'] = &$arrayWithReferences['thirdValue'];
-        $arrayWithReferences['fourthValue'] = ['firstValue' => &$arrayWithReferences['firstValue']];
-        $arrayWithReferences['fifthValue'] = [];
+        $arrayWithReferences['fourthValue'] = array('firstValue' => &$arrayWithReferences['firstValue']);
+        $arrayWithReferences['fifthValue'] = array();
         $arrayWithReferences['fifthValueAndReference'] = &$arrayWithReferences['fifthValue'];
 
         $serializedArrayWithReferences = serialize($arrayWithReferences);
