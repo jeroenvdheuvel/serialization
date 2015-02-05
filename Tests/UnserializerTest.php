@@ -273,6 +273,32 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($firstValue, $data->getPropertyValueByName('publicThirdValue'));
         $this->assertSame($secondValue, $data->getPropertyValueByName('publicFifthValue'));
     }
+
+    public function testArrayWithObjectsAsReferencesAreSame()
+    {
+        $emptyStub = new EmptyStub();
+        $serializedData = serialize(array(&$emptyStub, &$emptyStub));
+
+        $unserializer = new Unserializer();
+        $data = $unserializer->unserialize($serializedData);
+
+        $this->assertSame($data[0], $data[1]);
+        $data[0] = null;
+        $this->assertSame($data[0], $data[1]);
+    }
+
+    public function testArrayWithObjectsAsCopesAreNotSameAfterChanging()
+    {
+        $emptyStub = new EmptyStub();
+        $serializedData = serialize(array($emptyStub, $emptyStub));
+
+        $unserializer = new Unserializer();
+        $data = $unserializer->unserialize($serializedData);
+
+        $this->assertSame($data[0], $data[1]);
+        $data[0] = null;
+        $this->assertNotSame($data[0], $data[1]);
+    }
 }
 
 // TODO: Check if all flows are covered and can be simplfied

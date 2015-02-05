@@ -11,8 +11,11 @@ class ObjectContainingAnotherObjectLockableObjectStub extends LockableObject
     {
         parent::__construct('jvdh\Serialization\Stub\Serializable\ObjectContainingAnotherObject');
 
-        $this->addProperty(new PrivateObjectProperty('emptyObject', new EmptyLockableObjectStub()));
-        $this->addProperty(new ProtectedObjectProperty('simpleObject', new SimpleLockableObjectStub()));
+        $emptyStub = new EmptyLockableObjectStub();
+        $simpleStub = new SimpleLockableObjectStub();
+
+        $this->addProperty(new PrivateObjectProperty('emptyObject', $emptyStub));
+        $this->addProperty(new ProtectedObjectProperty('simpleObject', $simpleStub));
 
         $this->lock();
     }
