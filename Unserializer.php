@@ -82,7 +82,7 @@ class Unserializer implements UnserializerInterface
                 $r = &$this->parseReference();
                 return $r;
 
-            case strtolower(SerializedType::TYPE_REFERENCE): // TODO: Same object but not referenced. When assigning a different they won't be sort of references anymore. This only works for objects (not even arrays).
+            case strtolower(SerializedType::TYPE_REFERENCE):
                 $c = $this->parseCopy();
                 return $c;
         }
