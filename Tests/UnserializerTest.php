@@ -271,6 +271,12 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
         $emptyStub = new EmptyStub();
         $serializedData = serialize(array(&$emptyStub, &$emptyStub));
 
+        $nativeUnserializedData = unserialize($serializedData);
+        $nativeUnserializedData[0] = null;
+        if ($nativeUnserializedData[0] !== $nativeUnserializedData[1]) {
+            $this->markTestSkipped('Native unserialize isn\t returning a reference.');
+        }
+
         $data = $this->getUnserializer()->unserialize($serializedData);
 
         $this->assertSame($data[0], $data[1]);
