@@ -2,6 +2,7 @@
 namespace jvdh\Serialization\Tests;
 
 use jvdh\Serialization\Serializable\Object;
+use jvdh\Serialization\Serializer;
 use jvdh\Serialization\SerializerInterface;
 use jvdh\Serialization\Stub\Serializable\ArrayLockableObjectStub;
 use jvdh\Serialization\Stub\Serializable\ArrayStub;
@@ -14,7 +15,7 @@ use jvdh\Serialization\Stub\Serializable\SimpleLockableObjectStub;
 use jvdh\Serialization\Stub\Serializable\SimpleStub;
 use stdClass;
 
-abstract class SerializerTest extends \PHPUnit_Framework_TestCase
+class SerializerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider getUnserializedSimpleData
@@ -150,5 +151,8 @@ abstract class SerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @return SerializerInterface
      */
-    abstract protected function getSerializer();
+    protected function getSerializer()
+    {
+        return new Serializer();
+    }
 }

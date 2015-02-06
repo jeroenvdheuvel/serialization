@@ -1,6 +1,7 @@
 <?php
 namespace jvdh\Serialization;
 
+use jvdh\Serialization\Exception\UnsupportedDataTypeException;
 use jvdh\Serialization\Exception\UnsupportedPropertyTypeException;
 use jvdh\Serialization\Serializable\Object as SerializableObject;
 use jvdh\Serialization\Serializable\ObjectProperty;
@@ -8,8 +9,24 @@ use jvdh\Serialization\Serializable\PrivateObjectProperty;
 use jvdh\Serialization\Serializable\ProtectedObjectProperty;
 use jvdh\Serialization\Serializable\PublicObjectProperty;
 
-abstract class ObjectAndArraySerializer implements SerializerInterface
+class Serializer implements SerializerInterface
 {
+    /**
+     * @inheritdoc
+     */
+    public function serialize($data)
+    {
+        if ($data === null || is_bool($data) || is_int($data) || is_float($data) || is_string($data)) {
+            return serialize($data);
+        } elseif (is_array($data)) {
+            return $this->serializeArray($data);
+        } elseif (is_object($data) && $data instanceof SerializableObject) {
+            return $this->serializeObject($data);
+        }
+
+        throw new UnsupportedDataTypeException();
+    }
+
     /**
      * @param SerializableObject|ObjectProperty[] $data
      * @return string
