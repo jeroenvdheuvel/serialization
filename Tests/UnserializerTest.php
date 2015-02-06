@@ -28,8 +28,7 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
      */
     public function testUnserialize_withSimpleData($serializedData, $expectedData)
     {
-        $unserializer = new Unserializer();
-        $unserializedData = $unserializer->unserialize($serializedData);
+        $unserializedData = $this->getUnserializer()->unserialize($serializedData);
 
         $this->assertSame($expectedData, $unserializedData);
     }
@@ -57,8 +56,7 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
      */
     public function testUnserialize_withArray($serializedData, $expectedData)
     {
-        $unserializer = new Unserializer();
-        $unserializedData = $unserializer->unserialize($serializedData);
+        $unserializedData = $this->getUnserializer()->unserialize($serializedData);
 
         $this->assertEquals($expectedData, $unserializedData);
     }
@@ -85,8 +83,7 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
      */
     public function testUnserialize_withObject($serializedData, LockableObject $expectedData)
     {
-        $unserializer = new Unserializer();
-        $unserializedData = $unserializer->unserialize($serializedData);
+        $unserializedData = $this->getUnserializer()->unserialize($serializedData);
 
         $this->assertEqualsLockableObject($expectedData, $unserializedData);
     }
@@ -179,8 +176,7 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
      */
     public function testUnserialize_withUnknowntypeThrowsException()
     {
-        $unserializer = new Unserializer();
-        $unserializer->unserialize('Q:123');
+        $this->getUnserializer()->unserialize('Q:123');
     }
 
     /**
@@ -190,8 +186,7 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
      */
     public function testUnserialize_withReference($serializedData, $expectedData)
     {
-        $unserializer = new Unserializer();
-        $unserializedData = $unserializer->unserialize($serializedData);
+        $unserializedData = $this->getUnserializer()->unserialize($serializedData);
         $this->assertEquals($expectedData, $unserializedData);
     }
 
@@ -217,8 +212,7 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
      */
     public function testUnserialize_withInvalidKeyThrowsException($serializedData)
     {
-        $unserializer = new Unserializer();
-        $unserializer->unserialize($serializedData);
+        $this->getUnserializer()->unserialize($serializedData);
     }
 
     /**
@@ -247,8 +241,7 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
 
         $serializedArrayWithReferences = serialize($arrayWithReferences);
 
-        $unserializer = new Unserializer();
-        $data = $unserializer->unserialize($serializedArrayWithReferences);
+        $data = $this->getUnserializer()->unserialize($serializedArrayWithReferences);
 
         // Change References values on both arrays
         $arrayWithReferences['firstValue'] = $data['firstValue'] = 'abc';
@@ -262,8 +255,7 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
     {
         $serializedData = serialize(new ObjectContainingSimpleReferencesStub());
 
-        $unserializer = new Unserializer();
-        $data = $unserializer->unserialize($serializedData);
+        $data = $this->getUnserializer()->unserialize($serializedData);
 
         $firstValue = 5;
         $secondValue = 'a';
@@ -279,8 +271,7 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
         $emptyStub = new EmptyStub();
         $serializedData = serialize(array(&$emptyStub, &$emptyStub));
 
-        $unserializer = new Unserializer();
-        $data = $unserializer->unserialize($serializedData);
+        $data = $this->getUnserializer()->unserialize($serializedData);
 
         $this->assertSame($data[0], $data[1]);
         $data[0] = null;
@@ -292,12 +283,19 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
         $emptyStub = new EmptyStub();
         $serializedData = serialize(array($emptyStub, $emptyStub));
 
-        $unserializer = new Unserializer();
-        $data = $unserializer->unserialize($serializedData);
+        $data = $this->getUnserializer()->unserialize($serializedData);
 
         $this->assertSame($data[0], $data[1]);
         $data[0] = null;
         $this->assertNotSame($data[0], $data[1]);
+    }
+
+    /**
+     * @return Unserializer
+     */
+    private function getUnserializer()
+    {
+        return new Unserializer();
     }
 }
 

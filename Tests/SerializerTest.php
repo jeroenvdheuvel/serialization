@@ -3,7 +3,6 @@ namespace jvdh\Serialization\Tests;
 
 use jvdh\Serialization\Serializable\Object;
 use jvdh\Serialization\Serializer;
-use jvdh\Serialization\SerializerInterface;
 use jvdh\Serialization\Stub\Serializable\ArrayLockableObjectStub;
 use jvdh\Serialization\Stub\Serializable\ArrayStub;
 use jvdh\Serialization\Stub\Serializable\EmptyLockableObjectStub;
@@ -149,7 +148,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return SerializerInterface
+     * @return Serializer
      */
     protected function getSerializer()
     {
