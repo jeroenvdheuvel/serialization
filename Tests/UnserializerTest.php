@@ -196,8 +196,6 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
         $t3 = array('third array');
         $t1 = array('first array', &$t2, $t2, &$t2, &$t3, &$t3);
 
-        // TODO: use objects as well as references
-
         return array(
             $this->getSerializedDataWithExpectedUnserializedDataAsArray($t1),
         );

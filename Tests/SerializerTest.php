@@ -228,6 +228,11 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         return new Serializer();
     }
 
+    /**
+     * @param mixed $var1
+     * @param mixed $var2
+     * @return bool
+     */
     protected function isReferenceTest(&$var1, &$var2)
     {
         $same = false;
