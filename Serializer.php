@@ -51,7 +51,7 @@ class Serializer implements SerializerInterface
             return serialize($data);
         } elseif (is_array($data)) {
             return $this->serializeArray($data);
-        } elseif (is_object($data) && $data instanceof SerializableObject) {
+        } elseif ($data instanceof SerializableObject) {
             return $this->serializeObject($data);
         }
 
@@ -159,7 +159,7 @@ class Serializer implements SerializerInterface
 
     private function getCopyNumberOrThrowException($data)
     {
-        if (is_object($data) && $data instanceof SerializableObject) {
+        if ($data instanceof SerializableObject) {
             foreach ($this->references as $i => $reference) {
                 if ($data === $reference) {
                     return $i + 1;

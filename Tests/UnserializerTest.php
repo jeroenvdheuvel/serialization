@@ -274,7 +274,7 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
         $nativeUnserializedData = unserialize($serializedData);
         $nativeUnserializedData[0] = null;
         if ($nativeUnserializedData[0] !== $nativeUnserializedData[1]) {
-            $this->markTestSkipped('Native unserialize isn\t returning a reference.');
+            $this->markTestSkipped('Native unserialize isn\t returning a reference. This is probably HHVM.');
         }
 
         $data = $this->getUnserializer()->unserialize($serializedData);

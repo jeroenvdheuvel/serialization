@@ -193,6 +193,8 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         return $data;
     }
 
+    // TODO: Extract method with object and skip on HHVM
+
     /**
      * @dataProvider getCopyData
      *
