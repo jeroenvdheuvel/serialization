@@ -12,12 +12,24 @@ Master: [![Build Status](https://travis-ci.org/jeroenvdheuvel/serialization.svg?
 
 Known issues
 ------------
-Although serialized references can be unserialized. Unserialized references are merely a duplicate of the original data.
-When serializing this data again, it will differ from the php native serializer. Due to this malfunction, the
-unserializer doesn't support references that can cause a loop.
+HHVM is not able to serialize references containing objects. References containing objects, will be serialized as a
+copy/reference pointing to the same object but not to the same variable.
+
 
 For instance:
 ```php
-$array = [];
-$array[] = &$array;
+$o = new stdClass();
+echo serialize(array(&$o, &$o))
 ```
+Should echo `a:2:{i:0;O:8:"stdClass":0:{}i:1;R:2;}` when references are properly supported.
+HHVM will echo `a:2:{i:0;O:8:"stdClass":0:{}i:1;r:2;}`. Lowercase `r` means it's not a reference to the same variable.
+It's only pointing to the same object.
+
+
+HHVM does support variables containing references.
+For instance:
+```php
+$i = 1;
+echo serialize(array(&$i, &$i));
+```
+Will echo `a:2:{i:0;i:1;i:1;R:2;}` in both PHP and HHVM.
