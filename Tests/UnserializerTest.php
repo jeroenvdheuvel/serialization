@@ -224,7 +224,7 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testArrayWithReferences()
+    public function testUnserialize_withArrayContainingReferences()
     {
         $arrayWithReferences = array();
         $arrayWithReferences['firstValue'] = 123;
@@ -249,7 +249,7 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($arrayWithReferences, $data);
     }
 
-    public function testObjectAndReferenceAreSame()
+    public function testUnserialize_thatObjectAndReferenceAreSame()
     {
         $serializedData = serialize(new ObjectContainingSimpleReferencesStub());
 
@@ -264,7 +264,7 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($secondValue, $data->getPropertyValueByName('publicFifthValue'));
     }
 
-    public function testArrayWithObjectsAsReferencesAreSame()
+    public function testUnserialize_withArrayContainingObjectsAsReferencesAreSame()
     {
         $emptyStub = new EmptyStub();
         $serializedData = serialize(array(&$emptyStub, &$emptyStub));
@@ -282,7 +282,7 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($data[0], $data[1]);
     }
 
-    public function testArrayWithObjectsAsCopiesAreNotSameAfterChanging()
+    public function testUnserialize_withArrayContainingObjectsAsCopiesAreNotSameAfterChanging()
     {
         $emptyStub = new EmptyStub();
         $serializedData = serialize(array($emptyStub, $emptyStub));
@@ -292,6 +292,16 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($data[0], $data[1]);
         $data[0] = null;
         $this->assertNotSame($data[0], $data[1]);
+    }
+
+    public function testUnserialize_withNonExistingClass()
+    {
+        $className = 'NonExistingClass';
+        $serializedData = sprintf('O:%d:"%s":0:{}', strlen($className), $className);
+
+        $data = $this->getUnserializer()->unserialize($serializedData);
+        $this->assertSame($className, $data->getClassName());
+        $this->assertCount(0, $data);
     }
 
     /**
@@ -305,8 +315,4 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
 
 // TODO: Check if all flows are covered and can be simplfied
 // TODO: Make another Unserializer that uses unserialize() method of php when possible (not for arrays or objects)
-// TODO: Unserialize unexisting class (primary goal of this unserializer)
 // TODO: Add more tests concerning references
-
-// TODO: Make a test that checks if an unserialized references object is the same as the actual object: ===
-// TODO: Make sure references work with objects, but also objectA = objectB, one of the two should be of type "r" when serializing
