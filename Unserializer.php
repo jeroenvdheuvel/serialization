@@ -78,11 +78,11 @@ class Unserializer implements UnserializerInterface
                 $o = &$this->parseObject();
                 return $o;
 
-            case SerializedType::TYPE_REFERENCE:
+            case SerializedType::TYPE_REFERENCE_VARIABLE:
                 $r = &$this->parseReference();
                 return $r;
 
-            case strtolower(SerializedType::TYPE_REFERENCE):
+            case SerializedType::TYPE_POINTING_TO_SAME_OBJECT:
                 $c = $this->parseCopy();
                 return $c;
         }

@@ -10,5 +10,6 @@ class SerializedType
     const TYPE_DOUBLE = 'd';
     const TYPE_ARRAY = 'a';
     const TYPE_OBJECT = 'O';
-    const TYPE_REFERENCE = 'R';
+    const TYPE_REFERENCE_VARIABLE = 'R';
+    const TYPE_POINTING_TO_SAME_OBJECT = 'r';
 }

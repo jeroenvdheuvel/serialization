@@ -34,13 +34,13 @@ class Serializer implements SerializerInterface
     protected function parse(&$data)
     {
         try {
-            return 'R:' . $this->getReferenceNumberOrThrowException($data) . ';';
+            return sprintf('%s:%s;', SerializedType::TYPE_REFERENCE_VARIABLE, $this->getReferenceNumberOrThrowException($data));
         } catch (\Exception $e) {
 
         }
 
         try {
-            return 'r:' . $this->getCopyNumberOrThrowException($data) . ';';
+            return sprintf('%s:%s;', SerializedType::TYPE_POINTING_TO_SAME_OBJECT, $this->getCopyNumberOrThrowException($data));
         } catch (\Exception $e) {
 
         }
