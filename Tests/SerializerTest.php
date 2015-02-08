@@ -10,6 +10,8 @@ use jvdh\Serialization\Stub\Serializable\EmptyStub;
 use jvdh\Serialization\Stub\Serializable\ObjectContainingAnotherObject;
 use jvdh\Serialization\Stub\Serializable\ObjectContainingAnotherObjectLockableObjectStub;
 use jvdh\Serialization\Stub\Serializable\NonexistentObjectPropertyStub;
+use jvdh\Serialization\Stub\Serializable\ObjectContainingSimpleReferencesLockableObjectStub;
+use jvdh\Serialization\Stub\Serializable\ObjectContainingSimpleReferencesStub;
 use jvdh\Serialization\Stub\Serializable\SimpleLockableObjectStub;
 use jvdh\Serialization\Stub\Serializable\SimpleStub;
 use stdClass;
@@ -148,10 +150,69 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @dataProvider getReferenceData
+     *
+     * @param mixed $unserializedData
+     * @param string $expectedData
+     */
+    public function testSerialize_withReference($unserializedData, $expectedData)
+    {
+        $this->assertSame($expectedData, $this->getSerializer()->serialize($unserializedData));
+    }
+
+    /**
+     * @return array
+     */
+    public function getReferenceData()
+    {
+        $data = array();
+
+        $a = array();
+        $a[] = null;
+        $a[] = &$a[0];
+        $data[] = $this->getUnserializedDataWithExpectedSerializedDataAsArray($a);
+
+        $b = array();
+        $b[] = 2;
+        $b[] = &$b[0];
+        $data[] = $this->getUnserializedDataWithExpectedSerializedDataAsArray($b);
+
+        $c = array();
+        $c[] = array(2);
+        $c[] = &$c[0];
+        $data[] = $this->getUnserializedDataWithExpectedSerializedDataAsArray($c);
+
+        $emptyLockableStub = new EmptyLockableObjectStub();
+        $emptyStub = new EmptyStub();
+        $data[] = array(array(&$emptyLockableStub, &$emptyLockableStub), serialize(array(&$emptyStub, &$emptyStub)));
+
+        $data[] = array(new ObjectContainingSimpleReferencesLockableObjectStub(), serialize(new ObjectContainingSimpleReferencesStub()));
+
+        return $data;
+    }
+
+    /**
      * @return Serializer
      */
     protected function getSerializer()
     {
         return new Serializer();
+    }
+
+    protected function isReferenceTest(&$var1, &$var2)
+    {
+        $same = false;
+        if ($var1 === $var2) {
+            $originalVar1 = $var1;
+            do {
+                $newVar1 = uniqid();
+            } while ($var1 == $newVar1);
+            $var1 = $newVar1;
+            if ($var2 === $newVar1) {
+                $same = true;
+            }
+            $var1 = $originalVar1;
+        }
+        return $same;
     }
 }

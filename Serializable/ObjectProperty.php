@@ -39,7 +39,7 @@ abstract class ObjectProperty
     /**
      * @return mixed
      */
-    public function getValue()
+    public function &getValue()
     {
         return $this->value;
     }

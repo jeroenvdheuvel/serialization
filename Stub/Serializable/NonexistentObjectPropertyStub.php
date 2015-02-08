@@ -29,8 +29,9 @@ class NonexistentObjectPropertyStub extends ObjectProperty
     /**
      * @inheritdoc
      */
-    public function getValue()
+    public function &getValue()
     {
-        return 'value';
+        $v = 'value';
+        return $v;
     }
 }

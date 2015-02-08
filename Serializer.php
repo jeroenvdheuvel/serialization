@@ -12,16 +12,39 @@ use jvdh\Serialization\Serializable\PublicObjectProperty;
 class Serializer implements SerializerInterface
 {
     /**
+     * @var array
+     */
+    private $references;
+
+    /**
      * @inheritdoc
      */
     public function serialize($data)
     {
-        if ($data === null || is_bool($data) || is_int($data) || is_float($data) || is_string($data)) {
-            return serialize($data);
-        } elseif (is_array($data)) {
-            return $this->serializeArray($data);
-        } elseif (is_object($data) && $data instanceof SerializableObject) {
-            return $this->serializeObject($data);
+        $this->references = array();
+
+        return $this->parse($data);
+    }
+
+    /**
+     * @param mixed $data
+     * @return string
+     * @throws UnsupportedDataTypeException
+     */
+    protected function parse(&$data)
+    {
+        try {
+            return 'R:' . $this->getReferenceNumberOrThrowException($data) . ';';
+        } catch (\Exception $e) {
+            $this->references[] = &$data;
+
+            if ($data === null || is_bool($data) || is_int($data) || is_float($data) || is_string($data)) {
+                return serialize($data);
+            } elseif (is_array($data)) {
+                return $this->serializeArray($data);
+            } elseif (is_object($data) && $data instanceof SerializableObject) {
+                return $this->serializeObject($data);
+            }
         }
 
         throw new UnsupportedDataTypeException();
@@ -31,13 +54,19 @@ class Serializer implements SerializerInterface
      * @param SerializableObject|ObjectProperty[] $data
      * @return string
      */
-    protected function serializeObject(SerializableObject $data)
+    protected function serializeObject(SerializableObject &$data)
     {
         $serializedString = 'O:' . strlen($data->getClassName()) . ':"' . $data->getClassName() . '":' . count($data) . ':{';
 
-        foreach ($data as $propertyValue) {
-            $name = $this->serialize($this->getSerializedObjectPropertyName($propertyValue, $data->getClassName()));
-            $value = $this->serialize($propertyValue->getValue());
+        foreach ($data as $objectProperty) {
+            $properyName = $this->getSerializedObjectPropertyName($objectProperty, $data->getClassName());
+            $name = $this->parse($properyName);
+            // Keys can't be a reference
+            array_pop($this->references);
+
+            $propertyValue = &$objectProperty->getValue();
+            $value = $this->parse($propertyValue);
+
             $serializedString .= $name . $value;
         }
         $serializedString .= '}';
@@ -74,11 +103,49 @@ class Serializer implements SerializerInterface
     protected function serializeArray(array $data)
     {
         $arrayDataAsString = '';
-        foreach ($data as $key => $value) {
-            $arrayDataAsString .= $this->serialize($key);
-            $arrayDataAsString .= $this->serialize($value);
+        foreach ($data as $key => &$value) {
+            $arrayDataAsString .= $this->parse($key);
+            // Keys can't be a reference
+            array_pop($this->references);
+
+            $arrayDataAsString .= $this->parse($value);
         }
 
         return sprintf('%s:%d:{%s}', SerializedType::TYPE_ARRAY, count($data), $arrayDataAsString);
+    }
+
+    protected function getReferenceNumberOrThrowException(&$var)
+    {
+        foreach ($this->references as $i => &$reference) {
+            if ($this->isReference($var, $reference)) {
+                return $i + 1;
+            }
+        }
+
+        throw new \Exception('Not a reference');
+    }
+
+    /**
+     * @param mixed $var1
+     * @param mixed $var2
+     * @return bool
+     */
+    protected function isReference(&$var1, &$var2)
+    {
+        $same = false;
+        if ($var1 === $var2) {
+            $originalVar1 = $var1;
+            do {
+                $newVar1 = uniqid();
+            } while ($var1 === $newVar1);
+
+            $var1 = $newVar1;
+
+            if ($var2 === $newVar1) {
+                $same = true;
+            }
+            $var1 = $originalVar1;
+        }
+        return $same;
     }
 }
