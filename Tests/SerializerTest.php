@@ -186,7 +186,34 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $emptyStub = new EmptyStub();
         $data[] = array(array(&$emptyLockableStub, &$emptyLockableStub), serialize(array(&$emptyStub, &$emptyStub)));
 
+        $data[] = array(array(&$emptyLockableStub, &$emptyLockableStub, $emptyLockableStub), serialize(array(&$emptyStub, &$emptyStub, $emptyStub)));
+
         $data[] = array(new ObjectContainingSimpleReferencesLockableObjectStub(), serialize(new ObjectContainingSimpleReferencesStub()));
+
+        return $data;
+    }
+
+    /**
+     * @dataProvider getCopyData
+     *
+     * @param mixed $unserializedData
+     * @param string $expectedData
+     */
+    public function testSerialize_withCopy($unserializedData, $expectedData)
+    {
+        $this->assertSame($expectedData, $this->getSerializer()->serialize($unserializedData));
+    }
+
+    public function getCopyData()
+    {
+        $data = array();
+
+        $i = 4;
+        $data[] = $this->getUnserializedDataWithExpectedSerializedDataAsArray(array($i, $i));
+
+        $emptyStub = new EmptyStub();
+        $emptyLockableStub = new EmptyLockableObjectStub();
+        $data[] = array(array($emptyLockableStub, $emptyLockableStub), serialize(array($emptyStub, $emptyStub)));
 
         return $data;
     }
