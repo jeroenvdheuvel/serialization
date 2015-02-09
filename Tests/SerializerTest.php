@@ -16,7 +16,7 @@ use jvdh\Serialization\Stub\Serializable\SimpleLockableObjectStub;
 use jvdh\Serialization\Stub\Serializable\SimpleStub;
 use stdClass;
 
-class SerializerTest extends \PHPUnit_Framework_TestCase
+class SerializerTest extends AbstractSerializableTest
 {
     /**
      * @dataProvider getUnserializedSimpleData
@@ -150,12 +150,12 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider getReferenceData
+     * @dataProvider getSimpleReferenceData
      *
      * @param mixed $unserializedData
      * @param string $expectedData
      */
-    public function testSerialize_withReference($unserializedData, $expectedData)
+    public function testSerialize_withSimpleReference($unserializedData, $expectedData)
     {
         $this->assertSame($expectedData, $this->getSerializer()->serialize($unserializedData));
     }
@@ -163,7 +163,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function getReferenceData()
+    public function getSimpleReferenceData()
     {
         $data = array();
 
@@ -182,18 +182,39 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $c[] = &$c[0];
         $data[] = $this->getUnserializedDataWithExpectedSerializedDataAsArray($c);
 
+        $data[] = array(new ObjectContainingSimpleReferencesLockableObjectStub(), serialize(new ObjectContainingSimpleReferencesStub()));
+
+        return $data;
+    }
+
+    /**
+     * @dataProvider getObjectReferenceData
+     *
+     * @param mixed $unserializedData
+     * @param string $expectedData
+     */
+    public function testSerialize_withObjectReference($unserializedData, $expectedData)
+    {
+        $this->ensureNativeSerializeIsAbleToReturnReferencesToObjectsOrSkip();
+
+        $this->assertSame($expectedData, $this->getSerializer()->serialize($unserializedData));
+    }
+
+    /**
+     * @return array
+     */
+    public function getObjectReferenceData()
+    {
+        $data = array();
+
         $emptyLockableStub = new EmptyLockableObjectStub();
         $emptyStub = new EmptyStub();
         $data[] = array(array(&$emptyLockableStub, &$emptyLockableStub), serialize(array(&$emptyStub, &$emptyStub)));
 
         $data[] = array(array(&$emptyLockableStub, &$emptyLockableStub, $emptyLockableStub), serialize(array(&$emptyStub, &$emptyStub, $emptyStub)));
 
-        $data[] = array(new ObjectContainingSimpleReferencesLockableObjectStub(), serialize(new ObjectContainingSimpleReferencesStub()));
-
         return $data;
     }
-
-    // TODO: Extract method with object and skip on HHVM
 
     /**
      * @dataProvider getCopyData

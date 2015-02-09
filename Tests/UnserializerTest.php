@@ -18,7 +18,7 @@ use jvdh\Serialization\Stub\Serializable\SimpleLockableObjectStub;
 use jvdh\Serialization\Stub\Serializable\SimpleStub;
 use jvdh\Serialization\Unserializer;
 
-class UnserializerTest extends \PHPUnit_Framework_TestCase
+class UnserializerTest extends AbstractSerializableTest
 {
     /**
      * @dataProvider getSerializedSimpleData
@@ -269,7 +269,7 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
         $emptyStub = new EmptyStub();
         $serializedData = serialize(array(&$emptyStub, &$emptyStub));
 
-        $this->ensureNativeSerializeIsAbleToReturnReferencesToObjects();
+        $this->ensureNativeSerializeIsAbleToReturnReferencesToObjectsOrSkip();
 
         $data = $this->getUnserializer()->unserialize($serializedData);
 
@@ -307,16 +307,4 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
     {
         return new Unserializer();
     }
-
-    private function ensureNativeSerializeIsAbleToReturnReferencesToObjects()
-    {
-        $o = new \stdClass();
-        $nativeUnserializedData = unserialize(serialize(array(&$o, &$o)));
-        $nativeUnserializedData[0] = null;
-        if ($nativeUnserializedData[0] !== $nativeUnserializedData[1]) {
-            $this->markTestSkipped('Native unserialize isn\t returning a reference. This is probably HHVM.');
-        }
-    }
 }
-
-// TODO: Check if all flows are covered and can be simplfied
