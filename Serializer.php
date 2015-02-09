@@ -33,16 +33,9 @@ class Serializer implements SerializerInterface
      */
     protected function parse(&$data)
     {
-        try {
-            return sprintf('%s:%s;', SerializedType::TYPE_REFERENCE_VARIABLE, $this->getReferenceNumberOrThrowException($data));
-        } catch (\Exception $e) {
-
-        }
-
-        try {
-            return sprintf('%s:%s;', SerializedType::TYPE_POINTING_TO_SAME_OBJECT, $this->getCopyNumberOrThrowException($data));
-        } catch (\Exception $e) {
-
+        $referenceOrCopy = $this->serializeReferenceOrCopyOrReturnNull($data);
+        if ($referenceOrCopy !== null) {
+            return $referenceOrCopy;
         }
 
         $this->references[] = &$data;
@@ -122,7 +115,11 @@ class Serializer implements SerializerInterface
         return sprintf('%s:%d:{%s}', SerializedType::TYPE_ARRAY, count($data), $arrayDataAsString);
     }
 
-    protected function getReferenceNumberOrThrowException(&$var)
+    /**
+     * @param mixed $var
+     * @return int|null
+     */
+    protected function getReferenceNumberOrReturnNull(&$var)
     {
         foreach ($this->references as $i => &$reference) {
             if ($this->isReference($var, $reference)) {
@@ -130,7 +127,7 @@ class Serializer implements SerializerInterface
             }
         }
 
-        throw new \Exception('Not a reference');
+        return null;
     }
 
     /**
@@ -157,7 +154,11 @@ class Serializer implements SerializerInterface
         return $same;
     }
 
-    private function getCopyNumberOrThrowException($data)
+    /**
+     * @param mixed $data
+     * @return int|null
+     */
+    private function getCopyNumberOrReturnNull($data)
     {
         if ($data instanceof SerializableObject) {
             foreach ($this->references as $i => $reference) {
@@ -167,6 +168,25 @@ class Serializer implements SerializerInterface
             }
         }
 
-        throw new \Exception('Not a copy');
+        return null;
+    }
+
+    /**
+     * @param mixed $data
+     * @return null|string
+     */
+    private function serializeReferenceOrCopyOrReturnNull(&$data)
+    {
+        $referenceNumber = $this->getReferenceNumberOrReturnNull($data);
+        if ($referenceNumber !== null) {
+            return sprintf('%s:%s;', SerializedType::TYPE_REFERENCE_VARIABLE, $referenceNumber);
+        }
+
+        $copyNumber = $this->getCopyNumberOrReturnNull($data);
+        if ($copyNumber !== null) {
+            return sprintf('%s:%s;', SerializedType::TYPE_POINTING_TO_SAME_OBJECT, $copyNumber);
+        }
+
+        return null;
     }
 }
