@@ -269,11 +269,7 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
         $emptyStub = new EmptyStub();
         $serializedData = serialize(array(&$emptyStub, &$emptyStub));
 
-        $nativeUnserializedData = unserialize($serializedData);
-        $nativeUnserializedData[0] = null;
-        if ($nativeUnserializedData[0] !== $nativeUnserializedData[1]) {
-            $this->markTestSkipped('Native unserialize isn\t returning a reference. This is probably HHVM.');
-        }
+        $this->ensureNativeSerializeIsAbleToReturnReferencesToObjects();
 
         $data = $this->getUnserializer()->unserialize($serializedData);
 
@@ -311,8 +307,16 @@ class UnserializerTest extends \PHPUnit_Framework_TestCase
     {
         return new Unserializer();
     }
+
+    private function ensureNativeSerializeIsAbleToReturnReferencesToObjects()
+    {
+        $o = new \stdClass();
+        $nativeUnserializedData = unserialize(serialize(array(&$o, &$o)));
+        $nativeUnserializedData[0] = null;
+        if ($nativeUnserializedData[0] !== $nativeUnserializedData[1]) {
+            $this->markTestSkipped('Native unserialize isn\t returning a reference. This is probably HHVM.');
+        }
+    }
 }
 
 // TODO: Check if all flows are covered and can be simplfied
-// TODO: Make another Unserializer that uses unserialize() method of php when possible (not for arrays or objects)
-// TODO: Add more tests concerning references
