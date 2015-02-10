@@ -1,5 +1,5 @@
 {
-    "name": "jeroenvdheuve/unserializer",
+    "name": "jeroenvdheuve/serialization",
     "license": "MIT",
     "type": "library",
     "description": "Unserializes php serialized strings and is able the process class that are not loaded",
